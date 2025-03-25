@@ -1,6 +1,6 @@
-// src/components/LanguageSwitcher.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Globe, Check, ChevronDown } from 'lucide-react';
 
 interface Language {
   code: string;
@@ -11,7 +11,6 @@ interface Language {
 const LANGUAGES: Language[] = [
   { code: 'tr', name: 'Türkçe', flag: '🇹🇷' },
   { code: 'en', name: 'English', flag: '🇬🇧' },
-  // Daha fazla dil eklenebilir
 ];
 
 const LanguageSwitcher: React.FC = () => {
@@ -19,18 +18,14 @@ const LanguageSwitcher: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Mevcut dil
   const currentLanguage = LANGUAGES.find(lang => lang.code === i18n.language) || LANGUAGES[0];
 
-  // Dil değiştirme fonksiyonu
   const changeLanguage = (languageCode: string) => {
     i18n.changeLanguage(languageCode);
     setIsOpen(false);
-    // Dil tercihi tarayıcı deposunda saklanabilir
     localStorage.setItem('preferredLanguage', languageCode);
   };
 
-  // Dropdown dışına tıklanınca kapatma
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -44,7 +39,6 @@ const LanguageSwitcher: React.FC = () => {
     };
   }, []);
 
-  // Başlangıçta tarayıcıdan dil tercihini alma
   useEffect(() => {
     const savedLanguage = localStorage.getItem('preferredLanguage');
     if (savedLanguage && i18n.language !== savedLanguage) {
@@ -53,52 +47,54 @@ const LanguageSwitcher: React.FC = () => {
   }, [i18n]);
 
   return (
-    <div className="relative inline-block text-left" ref={dropdownRef}>
-      <div>
-        <button
-          type="button"
-          className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          onClick={() => setIsOpen(!isOpen)}
-        >
+    <div className="relative" ref={dropdownRef}>
+      <button
+        type="button"
+        className="inline-flex items-center justify-between w-full px-4 py-2.5 text-sm font-medium bg-white border border-gray-200 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#292A2D] focus:ring-offset-2 transition-all duration-300"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <div className="flex items-center">
+          <Globe size={18} className="text-[#292A2D] mr-2" />
           <span className="mr-2">{currentLanguage.flag}</span>
-          {currentLanguage.name}
-          <svg
-            className="-mr-1 ml-2 h-5 w-5"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              fillRule="evenodd"
-              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </button>
-      </div>
+          <span className="text-[#292A2D]">{currentLanguage.name}</span>
+        </div>
+        <ChevronDown
+          size={18}
+          className={`ml-2 text-gray-400 transition-transform duration-300 ${
+            isOpen ? 'transform rotate-180' : ''
+          }`}
+        />
+      </button>
 
-      {/* Dropdown menü */}
       {isOpen && (
-        <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
-          <div className="py-1" role="menu" aria-orientation="vertical">
-            {LANGUAGES.map((language) => (
-              <button
-                key={language.code}
-                className={`
-                  block px-4 py-2 text-sm w-full text-left
-                  ${language.code === i18n.language
-                    ? 'bg-gray-100 text-gray-900 font-medium'
-                    : 'text-gray-700 hover:bg-gray-100'
-                  }
-                `}
-                onClick={() => changeLanguage(language.code)}
-                role="menuitem"
-              >
-                <span className="mr-2">{language.flag}</span>
-                {language.name}
-              </button>
-            ))}
+        <div className="absolute right-0 z-10 mt-2 w-full overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 transform opacity-100 scale-100 transition-all duration-300">
+          <div className="py-1" role="menu">
+            {LANGUAGES.map((language) => {
+              const isSelected = language.code === i18n.language;
+              return (
+                <button
+                  key={language.code}
+                  className={`
+                    flex items-center justify-between w-full px-4 py-3 text-sm
+                    ${isSelected
+                      ? 'bg-[#f3f1f0] text-[#292A2D] font-medium'
+                      : 'text-gray-700 hover:bg-gray-50'
+                    }
+                    transition-colors duration-300
+                  `}
+                  onClick={() => changeLanguage(language.code)}
+                  role="menuitem"
+                >
+                  <div className="flex items-center">
+                    <span className="mr-2 text-base">{language.flag}</span>
+                    <span>{language.name}</span>
+                  </div>
+                  {isSelected && (
+                    <Check size={16} className="text-[#292A2D]" />
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
       )}
@@ -106,7 +102,6 @@ const LanguageSwitcher: React.FC = () => {
   );
 };
 
-// Daha basit bir alternatif versiyon
 export const SimpleLanguageSwitcher: React.FC = () => {
   const { i18n } = useTranslation();
 
@@ -121,15 +116,16 @@ export const SimpleLanguageSwitcher: React.FC = () => {
         <button
           key={language.code}
           className={`
-            px-3 py-1 rounded text-sm
+            inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300
             ${language.code === i18n.language
-              ? 'bg-blue-500 text-white'
-              : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
+              ? 'bg-[#292A2D] text-white'
+              : 'bg-white text-[#292A2D] border border-gray-200 hover:bg-gray-50'
             }
           `}
           onClick={() => changeLanguage(language.code)}
         >
-          {language.flag} {language.name}
+          <span className="mr-2">{language.flag}</span>
+          {language.name}
         </button>
       ))}
     </div>

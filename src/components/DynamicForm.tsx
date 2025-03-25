@@ -1,11 +1,10 @@
-//@ts-nocheck
-// src/components/DynamicForm.tsx
 import React, { useState, useEffect } from 'react';
 import { useForm, FormProvider, useFieldArray, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useTranslation } from 'react-i18next';
 import { FormSchema, FormField, FormSection, Condition } from '../types';
+import { AlertCircle, Plus, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
 
 // Zod şeması oluşturan fonksiyon
 const createValidationSchema = (formSchema: FormSchema, language: string) => {
@@ -13,9 +12,7 @@ const createValidationSchema = (formSchema: FormSchema, language: string) => {
   
   formSchema.sections.forEach(section => {
     section.fields.forEach(field => {
-      // Alanın koşullu gösterilip gösterilmediğini kontrol et
       if (field.conditions && field.conditions.length > 0) {
-        // Koşullu alanlar için validasyon, form submit edildiğinde kontrol edilecek
         schemaMap[field.name] = z.any().optional();
         return;
       }
@@ -175,14 +172,11 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
   const { t, i18n } = useTranslation();
   const currentLanguage = i18n.language;
   
-  // State oluşturulurken formun ilk şemasını ve dili sakla
   const [initialSchema] = useState(formSchema);
   const [initialLanguage] = useState(currentLanguage);
   
-  // Zod validasyon şeması oluştur
   const validationSchema = createValidationSchema(formSchema, currentLanguage);
   
-  // Form hook'unu başlat
   const methods = useForm({
     resolver: zodResolver(validationSchema),
     defaultValues: initialData,
@@ -192,14 +186,11 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
   const { handleSubmit, watch, control, formState: { errors, isSubmitting } } = methods;
   const formValues = watch();
   
-  // Form şeması değiştiğinde veya dil değiştiğinde resolver'ı güncelle
   useEffect(() => {
     methods.clearErrors();
   }, [formSchema, currentLanguage, methods]);
-  
-  // Alanları render etme fonksiyonu
+
   const renderField = (field: FormField, section: FormSection) => {
-    // Alan koşullarını kontrol et, gösterilmemesi gerekiyorsa render etme
     if (!shouldShowField(field, formValues)) {
       return null;
     }
@@ -208,16 +199,19 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
     const placeholder = field.placeholder?.[currentLanguage] || '';
     const description = field.description?.[currentLanguage] || '';
     
+    const baseInputClasses = "w-full p-3 border border-gray-200 rounded-lg bg-white focus:ring-2 focus:ring-[#292A2D] focus:border-transparent transition-all duration-300";
+    const errorInputClasses = "border-red-300 focus:ring-red-500";
+    
     switch (field.type) {
       case 'text':
         return (
-          <div className="mb-4">
+          <div className="mb-6">
             <label className="block mb-2 text-sm font-medium text-gray-700">
               {label}
               {field.required && <span className="text-red-500 ml-1">*</span>}
             </label>
             {description && (
-              <p className="mb-1 text-xs text-gray-500">{description}</p>
+              <p className="mb-2 text-sm text-gray-500">{description}</p>
             )}
             <Controller
               name={field.name}
@@ -226,9 +220,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                 <>
                   <input
                     type="text"
-                    className={`w-full p-2 border rounded-md ${
-                      errors[field.name] ? 'border-red-500' : 'border-gray-300'
-                    }`}
+                    className={`${baseInputClasses} ${errors[field.name] ? errorInputClasses : ''}`}
                     placeholder={placeholder}
                     value={value || ''}
                     onChange={onChange}
@@ -236,7 +228,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                     {...rest}
                   />
                   {errors[field.name] && (
-                    <p className="mt-1 text-xs text-red-500">
+                    <p className="mt-2 text-sm text-red-600">
                       {String(errors[field.name]?.message)}
                     </p>
                   )}
@@ -248,13 +240,13 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
         
       case 'textarea':
         return (
-          <div className="mb-4">
+          <div className="mb-6">
             <label className="block mb-2 text-sm font-medium text-gray-700">
               {label}
               {field.required && <span className="text-red-500 ml-1">*</span>}
             </label>
             {description && (
-              <p className="mb-1 text-xs text-gray-500">{description}</p>
+              <p className="mb-2 text-sm text-gray-500">{description}</p>
             )}
             <Controller
               name={field.name}
@@ -262,9 +254,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
               render={({ field: { onChange, value, ref, ...rest } }) => (
                 <>
                   <textarea
-                    className={`w-full p-2 border rounded-md ${
-                      errors[field.name] ? 'border-red-500' : 'border-gray-300'
-                    }`}
+                    className={`${baseInputClasses} min-h-[120px] ${errors[field.name] ? errorInputClasses : ''}`}
                     placeholder={placeholder}
                     value={value || ''}
                     onChange={onChange}
@@ -273,7 +263,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                     {...rest}
                   />
                   {errors[field.name] && (
-                    <p className="mt-1 text-xs text-red-500">
+                    <p className="mt-2 text-sm text-red-600">
                       {String(errors[field.name]?.message)}
                     </p>
                   )}
@@ -285,13 +275,13 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
         
       case 'date':
         return (
-          <div className="mb-4">
+          <div className="mb-6">
             <label className="block mb-2 text-sm font-medium text-gray-700">
               {label}
               {field.required && <span className="text-red-500 ml-1">*</span>}
             </label>
             {description && (
-              <p className="mb-1 text-xs text-gray-500">{description}</p>
+              <p className="mb-2 text-sm text-gray-500">{description}</p>
             )}
             <Controller
               name={field.name}
@@ -300,16 +290,14 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                 <>
                   <input
                     type="date"
-                    className={`w-full p-2 border rounded-md ${
-                      errors[field.name] ? 'border-red-500' : 'border-gray-300'
-                    }`}
+                    className={`${baseInputClasses} ${errors[field.name] ? errorInputClasses : ''}`}
                     value={value || ''}
                     onChange={onChange}
                     ref={ref}
                     {...rest}
                   />
                   {errors[field.name] && (
-                    <p className="mt-1 text-xs text-red-500">
+                    <p className="mt-2 text-sm text-red-600">
                       {String(errors[field.name]?.message)}
                     </p>
                   )}
@@ -321,7 +309,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
         
       case 'boolean':
         return (
-          <div className="mb-4">
+          <div className="mb-6">
             <div className="flex items-start">
               <Controller
                 name={field.name}
@@ -331,20 +319,20 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                     <div className="flex h-5 items-center">
                       <input
                         type="checkbox"
-                        className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                        className="h-4 w-4 rounded border-gray-300 text-[#292A2D] focus:ring-[#292A2D] transition-all duration-300"
                         checked={value || false}
                         onChange={(e) => onChange(e.target.checked)}
                         ref={ref}
                         {...rest}
                       />
                     </div>
-                    <div className="ml-3 text-sm">
-                      <label className="font-medium text-gray-700">
+                    <div className="ml-3">
+                      <label className="text-sm font-medium text-gray-700">
                         {label}
                         {field.required && <span className="text-red-500 ml-1">*</span>}
                       </label>
                       {description && (
-                        <p className="text-gray-500">{description}</p>
+                        <p className="text-sm text-gray-500">{description}</p>
                       )}
                     </div>
                   </>
@@ -352,7 +340,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
               />
             </div>
             {errors[field.name] && (
-              <p className="mt-1 text-xs text-red-500">
+              <p className="mt-2 text-sm text-red-600">
                 {String(errors[field.name]?.message)}
               </p>
             )}
@@ -361,13 +349,13 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
         
       case 'select':
         return (
-          <div className="mb-4">
+          <div className="mb-6">
             <label className="block mb-2 text-sm font-medium text-gray-700">
               {label}
               {field.required && <span className="text-red-500 ml-1">*</span>}
             </label>
             {description && (
-              <p className="mb-1 text-xs text-gray-500">{description}</p>
+              <p className="mb-2 text-sm text-gray-500">{description}</p>
             )}
             <Controller
               name={field.name}
@@ -375,9 +363,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
               render={({ field: { onChange, value, ref, ...rest } }) => (
                 <>
                   <select
-                    className={`w-full p-2 border rounded-md bg-white ${
-                      errors[field.name] ? 'border-red-500' : 'border-gray-300'
-                    }`}
+                    className={`${baseInputClasses} ${errors[field.name] ? errorInputClasses : ''}`}
                     value={value || ''}
                     onChange={onChange}
                     ref={ref}
@@ -391,7 +377,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                     ))}
                   </select>
                   {errors[field.name] && (
-                    <p className="mt-1 text-xs text-red-500">
+                    <p className="mt-2 text-sm text-red-600">
                       {String(errors[field.name]?.message)}
                     </p>
                   )}
@@ -403,13 +389,13 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
         
       case 'dynamicList':
         return (
-          <div className="mb-6">
+          <div className="mb-8">
             <label className="block mb-2 text-sm font-medium text-gray-700">
               {label}
               {field.required && <span className="text-red-500 ml-1">*</span>}
             </label>
             {description && (
-              <p className="mb-1 text-xs text-gray-500">{description}</p>
+              <p className="mb-2 text-sm text-gray-500">{description}</p>
             )}
             
             <Controller
@@ -423,30 +409,31 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                   <div className="space-y-4">
                     {items.length > 0 ? (
                       items.map((item, itemIndex) => (
-                        <div key={itemIndex} className="p-4 border rounded-md bg-gray-50">
-                          <div className="flex justify-between mb-3">
+                        <div key={itemIndex} className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                          <div className="flex justify-between items-center mb-4">
                             <h4 className="font-medium text-gray-700">{t('item', 'Öğe')} #{itemIndex + 1}</h4>
                             <button
                               type="button"
-                              className="text-red-600 hover:text-red-800 text-sm"
+                              className="inline-flex items-center text-red-600 hover:text-red-800 text-sm font-medium"
                               onClick={() => {
                                 const newItems = [...items];
                                 newItems.splice(itemIndex, 1);
                                 onChange(newItems);
                               }}
                             >
+                              <Trash2 size={16} className="mr-1" />
                               {t('remove', 'Kaldır')}
                             </button>
                           </div>
                           
-                          <div className="space-y-3">
+                          <div className="space-y-4">
                             {field.fields?.map((subField) => {
                               const subFieldLabel = subField.label[currentLanguage] || subField.name;
                               const subFieldPlaceholder = subField.placeholder?.[currentLanguage] || '';
                               
                               return (
                                 <div key={subField.name}>
-                                  <label className="block mb-1 text-sm font-medium text-gray-700">
+                                  <label className="block mb-2 text-sm font-medium text-gray-700">
                                     {subFieldLabel}
                                     {subField.required && <span className="text-red-500 ml-1">*</span>}
                                   </label>
@@ -454,7 +441,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                                   {subField.type === 'date' ? (
                                     <input
                                       type="date"
-                                      className="w-full p-2 border rounded-md border-gray-300"
+                                      className={baseInputClasses}
                                       value={item[subField.name] || ''}
                                       onChange={(e) => {
                                         const newItems = [...items];
@@ -469,7 +456,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                                     <div className="flex items-center">
                                       <input
                                         type="checkbox"
-                                        className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                        className="h-4 w-4 rounded border-gray-300 text-[#292A2D] focus:ring-[#292A2D]"
                                         checked={item[subField.name] || false}
                                         onChange={(e) => {
                                           const newItems = [...items];
@@ -485,7 +472,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                                   ) : (
                                     <input
                                       type="text"
-                                      className="w-full p-2 border rounded-md border-gray-300"
+                                      className={baseInputClasses}
                                       placeholder={subFieldPlaceholder}
                                       value={item[subField.name] || ''}
                                       onChange={(e) => {
@@ -505,14 +492,14 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                         </div>
                       ))
                     ) : (
-                      <div className="p-4 border rounded-md border-dashed border-gray-300 bg-gray-50 text-center text-gray-500">
-                        {t('noDynamicItems', 'Henüz öğe eklenmemiş')}
+                      <div className="p-8 text-center border-2 border-dashed border-gray-300 rounded-lg">
+                        <p className="text-gray-500">{t('noDynamicItems', 'Henüz öğe eklenmemiş')}</p>
                       </div>
                     )}
                     
                     <button
                       type="button"
-                      className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+                      className="w-full py-3 px-4 border border-[#292A2D] rounded-lg shadow-sm text-sm font-medium text-[#292A2D] bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#292A2D] transition-all duration-300 flex items-center justify-center"
                       onClick={() => {
                         const newItem = field.fields?.reduce((acc, subField) => {
                           return { ...acc, [subField.name]: '' };
@@ -520,13 +507,17 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                         onChange([...items, newItem]);
                       }}
                     >
+                      <Plus size={20} className="mr-2" />
                       {t('addNew', 'Yeni Ekle')}
                     </button>
                     
                     {errors[field.name] && (
-                      <p className="mt-1 text-xs text-red-500">
-                        {String(errors[field.name]?.message)}
-                      </p>
+                      <div className="mt-2 flex items-start p-4 rounded-lg bg-red-50">
+                        <AlertCircle className="h-5 w-5 text-red-400 mt-0.5" />
+                        <p className="ml-3 text-sm text-red-600">
+                          {String(errors[field.name]?.message)}
+                        </p>
+                      </div>
                     )}
                   </div>
                 );
@@ -541,7 +532,6 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
   };
   
   const processFormData = (data: any) => {
-    // Gönderilecek veriyi temizle: gösterilmeyen koşullu alanları kaldır
     const cleanedData: Record<string, any> = {};
     
     formSchema.sections.forEach(section => {
@@ -562,25 +552,23 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
   
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
+      <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-8">
         <div className="space-y-8">
           {formSchema.sections.map((section) => (
-            <div key={section.id} className="space-y-4">
-              <div>
-                <h2 className="text-xl font-bold text-gray-900">{section.title[currentLanguage]}</h2>
+            <div key={section.id} className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+              <div className="p-6 bg-[#f3f1f0]">
+                <h2 className="text-xl font-bold text-[#292A2D]">{section.title[currentLanguage]}</h2>
                 {section.description && section.description[currentLanguage] && (
-                  <p className="mt-1 text-sm text-gray-600">{section.description[currentLanguage]}</p>
+                  <p className="mt-2 text-sm text-gray-600">{section.description[currentLanguage]}</p>
                 )}
               </div>
               
-              <div className="bg-white shadow sm:rounded-md sm:overflow-hidden">
-                <div className="px-4 py-5 sm:p-6 space-y-4">
-                  {section.fields.map((field) => (
-                    <React.Fragment key={field.name}>
-                      {renderField(field, section)}
-                    </React.Fragment>
-                  ))}
-                </div>
+              <div className="p-6">
+                {section.fields.map((field) => (
+                  <React.Fragment key={field.name}>
+                    {renderField(field, section)}
+                  </React.Fragment>
+                ))}
               </div>
             </div>
           ))}
@@ -590,7 +578,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
           <button
             type="submit"
             disabled={isSubmitting}
-            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+            className="inline-flex justify-center items-center px-6 py-3 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-[#292A2D] hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#292A2D] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
           >
             {isSubmitting ? (
               <>

@@ -1,26 +1,23 @@
-// src/admin/pages/FormSchemaBuilder.tsx
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
-import { FormSchemaPreview } from '../components/FormSchemaPreview';
-import { SectionBuilder } from '../components/SectionBuilder';
+import { FormSchemaPreview } from '../../components/FormSchemaPreview';
+import { SectionBuilder } from '../../components/SectionBuilder';
 import { 
   FormSchema, 
   FormSection, 
   FormField, 
   FormOption,
   FieldType
-} from '../../types';
-import instance from '../../http/instance';
+} from '../../../types';
+import instance from '../../../http/instance';
+import { Plus, Eye, Save, ArrowLeft, Loader, AlertCircle } from 'lucide-react';
 
-// Form tipi için desteklenen diller
 const SUPPORTED_LANGUAGES = ['tr', 'en'];
 
-// Yeni bir form için default şema
 const createNewFormSchema = (): FormSchema => {
   const formId = uuidv4();
-  
   return {
     id: formId,
     title: {
@@ -31,7 +28,6 @@ const createNewFormSchema = (): FormSchema => {
   };
 };
 
-// Yeni bir bölüm için default şema
 const createNewSection = (): FormSection => {
   return {
     id: uuidv4(),
@@ -43,7 +39,6 @@ const createNewSection = (): FormSection => {
   };
 };
 
-// Yeni bir alan için default şema
 const createNewField = (type: FieldType = 'text'): FormField => {
   return {
     name: `field_${uuidv4().substring(0, 8)}`,
@@ -60,7 +55,6 @@ const createNewField = (type: FieldType = 'text'): FormField => {
   };
 };
 
-// Yeni bir seçenek için default şema
 const createNewOption = (): FormOption => {
   return {
     value: `option_${uuidv4().substring(0, 8)}`,
@@ -82,11 +76,10 @@ const FormSchemaBuilder: React.FC = () => {
   const [currentLanguage, setCurrentLanguage] = useState<string>(i18n.language);
   const [formName, setFormName] = useState<string>('');
 
-  // Form ID varsa, form şemasını sunucudan getir
   useEffect(() => {
     if (formId && formId !== 'new') {
       setLoading(true);
-      instance.get(`/api/form-schemas/${formId}`)
+      instance.get(`/form-schemas/${formId}`)
         .then(response => {
           setFormSchema(response.data.schema);
           setFormName(response.data.schema.title[currentLanguage] || '');
@@ -101,7 +94,6 @@ const FormSchemaBuilder: React.FC = () => {
     }
   }, [formId, currentLanguage]);
 
-  // Form adını güncelle
   const handleFormNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormName(e.target.value);
     setFormSchema(prev => ({
@@ -113,7 +105,6 @@ const FormSchemaBuilder: React.FC = () => {
     }));
   };
 
-  // Form açıklamasını güncelle
   const handleFormDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setFormSchema(prev => ({
       ...prev,
@@ -124,7 +115,6 @@ const FormSchemaBuilder: React.FC = () => {
     }));
   };
 
-  // Yeni bir bölüm ekle
   const handleAddSection = () => {
     setFormSchema(prev => ({
       ...prev,
@@ -132,7 +122,6 @@ const FormSchemaBuilder: React.FC = () => {
     }));
   };
 
-  // Bölümü güncelle
   const handleUpdateSection = (updatedSection: FormSection, index: number) => {
     setFormSchema(prev => {
       const updatedSections = [...prev.sections];
@@ -144,7 +133,6 @@ const FormSchemaBuilder: React.FC = () => {
     });
   };
 
-  // Bölümü sil
   const handleDeleteSection = (index: number) => {
     setFormSchema(prev => {
       const updatedSections = [...prev.sections];
@@ -156,7 +144,6 @@ const FormSchemaBuilder: React.FC = () => {
     });
   };
 
-  // Bölümlerin sırasını değiştir
   const handleMoveSection = (index: number, direction: 'up' | 'down') => {
     if (
       (direction === 'up' && index === 0) || 
@@ -168,11 +155,8 @@ const FormSchemaBuilder: React.FC = () => {
     setFormSchema(prev => {
       const updatedSections = [...prev.sections];
       const targetIndex = direction === 'up' ? index - 1 : index + 1;
-      
-      // Swap sections
       [updatedSections[index], updatedSections[targetIndex]] = 
       [updatedSections[targetIndex], updatedSections[index]];
-      
       return {
         ...prev,
         sections: updatedSections
@@ -180,34 +164,28 @@ const FormSchemaBuilder: React.FC = () => {
     });
   };
 
-  // Dil değiştir
   const handleLanguageChange = (lang: string) => {
     setCurrentLanguage(lang);
-    // Form adını seçilen dile göre güncelle
     setFormName(formSchema.title[lang] || '');
   };
 
-  // Form şemasını kaydet
   const handleSaveFormSchema = async () => {
     try {
       setLoading(true);
       setError(null);
       
-      // Validasyon: form adı kontrolü
       if (!formSchema.title[currentLanguage]) {
         setError('Form adı boş olamaz');
         setLoading(false);
         return;
       }
 
-      // Validasyon: en az bir bölüm olmalı
       if (formSchema.sections.length === 0) {
         setError('Formda en az bir bölüm olmalıdır');
         setLoading(false);
         return;
       }
 
-      // Validasyon: her bölümde en az bir alan olmalı
       const emptySectionIndex = formSchema.sections.findIndex(section => section.fields.length === 0);
       if (emptySectionIndex !== -1) {
         setError(`"${formSchema.sections[emptySectionIndex].title[currentLanguage]}" bölümünde en az bir alan olmalıdır`);
@@ -215,13 +193,12 @@ const FormSchemaBuilder: React.FC = () => {
         return;
       }
 
-      // Form şemasını API'ye gönder
       const isNewForm = !formId || formId === 'new';
-      const apiUrl = isNewForm ? '/api/form-schemas' : `/api/form-schemas/${formId}`;
+      const apiUrl = isNewForm ? '/form-schemas' : `/form-schemas/${formId}`;
       const apiMethod = isNewForm ? instance.post : instance.put;
       
       await apiMethod(apiUrl, formSchema);
-      navigate('/admin/forms');
+      navigate('/admin/forms', { replace: true });
     } catch (err) {
       console.error(err);
       setError('Form şeması kaydedilirken bir hata oluştu');
@@ -231,86 +208,124 @@ const FormSchemaBuilder: React.FC = () => {
   };
 
   if (loading && formId !== 'new') {
-    return <div className="p-4">Yükleniyor...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="flex flex-col items-center space-y-4">
+          <Loader className="w-12 h-12 text-[#292A2D] animate-spin" />
+          <p className="text-[#292A2D] font-medium">Yükleniyor...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">
-          {formId && formId !== 'new' ? 'Form Düzenle' : 'Yeni Form Oluştur'}
-        </h1>
-        <div>
-          <button
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mr-2"
-            onClick={() => setPreviewMode(!previewMode)}
-          >
-            {previewMode ? 'Düzenleme Modu' : 'Önizleme'}
-          </button>
-          <button
-            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
-            onClick={handleSaveFormSchema}
-            disabled={loading}
-          >
-            {loading ? 'Kaydediliyor...' : 'Kaydet'}
-          </button>
+    <div className="container mx-auto p-6">
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <button
+              onClick={() => navigate('/admin/forms')}
+              className="inline-flex items-center text-[#292A2D] hover:text-opacity-80 mb-4 transition-all duration-300"
+            >
+              <ArrowLeft size={20} className="mr-2" />
+              Formlara Dön
+            </button>
+            <h1 className="text-3xl font-bold text-[#292A2D]">
+              {formId && formId !== 'new' ? 'Form Düzenle' : 'Yeni Form Oluştur'}
+            </h1>
+          </div>
+          <div className="flex items-center space-x-4">
+            <button
+              className={`
+                inline-flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-300
+                ${previewMode 
+                  ? 'bg-white text-[#292A2D] border border-[#292A2D]' 
+                  : 'bg-[#292A2D] text-white'
+                }
+              `}
+              onClick={() => setPreviewMode(!previewMode)}
+            >
+              <Eye size={20} className="mr-2" />
+              {previewMode ? 'Düzenleme Modu' : 'Önizleme'}
+            </button>
+            <button
+              className="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={handleSaveFormSchema}
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Loader className="animate-spin -ml-1 mr-2 h-5 w-5" />
+                  Kaydediliyor...
+                </>
+              ) : (
+                <>
+                  <Save size={20} className="mr-2" />
+                  Kaydet
+                </>
+              )}
+            </button>
+          </div>
         </div>
-      </div>
 
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          {error}
-        </div>
-      )}
+        {error && (
+          <div className="mb-6 flex items-center space-x-3 bg-red-50 text-red-700 px-4 py-3 rounded-lg">
+            <AlertCircle className="h-5 w-5 text-red-400" />
+            <p className="text-sm font-medium">{error}</p>
+          </div>
+        )}
 
-      <div className="mb-6 bg-white p-4 rounded shadow">
-        <div className="flex mb-4">
-          <div className="mr-4">
-            <label className="block mb-1 font-medium">Dil:</label>
-            <div className="flex space-x-2">
-              {SUPPORTED_LANGUAGES.map(lang => (
-                <button
-                  key={lang}
-                  className={`px-3 py-1 rounded ${
-                    currentLanguage === lang 
-                      ? 'bg-blue-500 text-white' 
-                      : 'bg-gray-200 hover:bg-gray-300'
-                  }`}
-                  onClick={() => handleLanguageChange(lang)}
-                >
-                  {lang.toUpperCase()}
-                </button>
-              ))}
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+          <div className="mb-6">
+            <div className="flex items-center space-x-4 mb-6">
+              <h2 className="text-lg font-medium text-[#292A2D]">Dil:</h2>
+              <div className="flex space-x-2">
+                {SUPPORTED_LANGUAGES.map(lang => (
+                  <button
+                    key={lang}
+                    className={`
+                      px-4 py-2 rounded-lg font-medium transition-all duration-300
+                      ${currentLanguage === lang 
+                        ? 'bg-[#292A2D] text-white' 
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }
+                    `}
+                    onClick={() => handleLanguageChange(lang)}
+                  >
+                    {lang.toUpperCase()}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
-        </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block mb-1 font-medium">Form Adı:</label>
-            <input
-              type="text"
-              className="w-full p-2 border rounded"
-              value={formName}
-              onChange={handleFormNameChange}
-              placeholder={`Form adını ${currentLanguage.toUpperCase()} dilinde girin`}
-            />
-          </div>
-          <div>
-            <label className="block mb-1 font-medium">Form Açıklaması (Opsiyonel):</label>
-            <textarea
-              className="w-full p-2 border rounded"
-              value={formSchema.description?.[currentLanguage] || ''}
-              onChange={handleFormDescriptionChange}
-              placeholder={`Form açıklamasını ${currentLanguage.toUpperCase()} dilinde girin`}
-              rows={2}
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-700">Form Adı:</label>
+                <input
+                  type="text"
+                  className="w-full p-3 border border-gray-200 rounded-lg bg-white focus:ring-2 focus:ring-[#292A2D] focus:border-transparent transition-all duration-300"
+                  value={formName}
+                  onChange={handleFormNameChange}
+                  placeholder={`Form adını ${currentLanguage.toUpperCase()} dilinde girin`}
+                />
+              </div>
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-700">Form Açıklaması (Opsiyonel):</label>
+                <textarea
+                  className="w-full p-3 border border-gray-200 rounded-lg bg-white focus:ring-2 focus:ring-[#292A2D] focus:border-transparent transition-all duration-300"
+                  value={formSchema.description?.[currentLanguage] || ''}
+                  onChange={handleFormDescriptionChange}
+                  placeholder={`Form açıklamasını ${currentLanguage.toUpperCase()} dilinde girin`}
+                  rows={2}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       {!previewMode ? (
-        <div>
+        <div className="space-y-6">
           {formSchema.sections.map((section, index) => (
             <SectionBuilder
               key={section.id}
@@ -327,23 +342,19 @@ const FormSchemaBuilder: React.FC = () => {
             />
           ))}
 
-          <div className="mt-4">
-            <button
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-              onClick={handleAddSection}
-            >
-              Yeni Bölüm Ekle
-            </button>
-          </div>
+          <button
+            className="w-full p-4 bg-[#f3f1f0] hover:bg-opacity-80 text-[#292A2D] rounded-xl font-medium transition-all duration-300 flex items-center justify-center space-x-2"
+            onClick={handleAddSection}
+          >
+            <Plus size={24} />
+            <span>Yeni Bölüm Ekle</span>
+          </button>
         </div>
       ) : (
-        <div className="bg-white p-4 rounded shadow">
-          <h2 className="text-xl font-bold mb-4">Form Önizleme</h2>
-          <FormSchemaPreview
-            formSchema={formSchema}
-            currentLanguage={currentLanguage}
-          />
-        </div>
+        <FormSchemaPreview
+          formSchema={formSchema}
+          currentLanguage={currentLanguage}
+        />
       )}
     </div>
   );

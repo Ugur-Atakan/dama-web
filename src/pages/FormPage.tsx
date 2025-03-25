@@ -24,7 +24,7 @@ const FormPage: React.FC = () => {
       
       try {
         setLoading(true);
-        const response = await instance.get(`/api/form-schemas/${formId}`);
+        const response = await instance.get(`/form-schemas/${formId}`);
         
         // API'den gelen formu tip güvenliği için kontrol et ve dönüştür
         if (response.data && response.data.schema) {
@@ -74,7 +74,7 @@ const FormPage: React.FC = () => {
     try {
       setLoading(true);
       // Form verilerini API'ye gönder
-      const response = await instance.post(`/api/forms/${formId}/submissions`, data);
+      const response = await instance.post(`/forms/${formId}/submissions`, data);
       
       // Başarı sayfasına yönlendir (ek bilgilerle)
       navigate('/success', { 

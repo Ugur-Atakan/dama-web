@@ -1,8 +1,7 @@
-
-// src/admin/components/SectionBuilder.tsx (değiştirilmiş terminoloji)
 import React, { useState } from 'react';
 import { FieldBuilder } from './FieldBuilder';
 import { FormSection, FormField, FormOption, FieldType } from '../../types';
+import { ChevronDown, ChevronUp, ArrowUp, ArrowDown, Trash2, Plus, Layout, TextIcon, CalendarIcon, ToggleLeft, ListIcon, List } from 'lucide-react';
 
 interface SectionBuilderProps {
   section: FormSection;
@@ -31,7 +30,6 @@ export const SectionBuilder: React.FC<SectionBuilderProps> = ({
 }) => {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
-  // Bölüm başlığını güncelle
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onUpdate({
       ...section,
@@ -42,7 +40,6 @@ export const SectionBuilder: React.FC<SectionBuilderProps> = ({
     });
   };
 
-  // Bölüm açıklamasını güncelle
   const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     onUpdate({
       ...section,
@@ -53,7 +50,6 @@ export const SectionBuilder: React.FC<SectionBuilderProps> = ({
     });
   };
 
-  // Yeni soru ekle
   const handleAddField = (type: FieldType = 'text') => {
     onUpdate({
       ...section,
@@ -61,7 +57,6 @@ export const SectionBuilder: React.FC<SectionBuilderProps> = ({
     });
   };
 
-  // Soruyu güncelle
   const handleUpdateField = (updatedField: FormField, fieldIndex: number) => {
     onUpdate({
       ...section,
@@ -71,7 +66,6 @@ export const SectionBuilder: React.FC<SectionBuilderProps> = ({
     });
   };
 
-  // Soruyu sil
   const handleDeleteField = (fieldIndex: number) => {
     onUpdate({
       ...section,
@@ -79,7 +73,6 @@ export const SectionBuilder: React.FC<SectionBuilderProps> = ({
     });
   };
 
-  // Soruların sırasını değiştir
   const handleMoveField = (fieldIndex: number, direction: 'up' | 'down') => {
     if (
       (direction === 'up' && fieldIndex === 0) || 
@@ -91,7 +84,6 @@ export const SectionBuilder: React.FC<SectionBuilderProps> = ({
     const updatedFields = [...section.fields];
     const targetIndex = direction === 'up' ? fieldIndex - 1 : fieldIndex + 1;
     
-    // Swap fields
     [updatedFields[fieldIndex], updatedFields[targetIndex]] = 
     [updatedFields[targetIndex], updatedFields[fieldIndex]];
     
@@ -101,73 +93,97 @@ export const SectionBuilder: React.FC<SectionBuilderProps> = ({
     });
   };
 
-  return (
-    <div className="bg-white rounded shadow mb-4 overflow-hidden">
-      <div className="bg-gray-100 p-4 flex justify-between items-center">
-        <div className="flex items-center">
-          <span className="font-medium text-gray-700 mr-2">Bölüm {index + 1}:</span>
-          <input
-            type="text"
-            className="px-2 py-1 border rounded"
-            value={section.title[currentLanguage] || ''}
-            onChange={handleTitleChange}
-            placeholder={`Bölüm başlığını ${currentLanguage.toUpperCase()} dilinde girin`}
-          />
-        </div>
-        <div className="flex space-x-2">
-          {!isFirst && (
-            <button
-              className="text-gray-700 hover:text-blue-600"
-              onClick={() => onMove('up')}
-              title="Yukarı Taşı"
-            >
-              ⬆️
-            </button>
-          )}
-          {!isLast && (
-            <button
-              className="text-gray-700 hover:text-blue-600"
-              onClick={() => onMove('down')}
-              title="Aşağı Taşı"
-            >
-              ⬇️
-            </button>
-          )}
-          <button
-            className="text-gray-700 hover:text-blue-600"
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            title={isCollapsed ? 'Genişlet' : 'Daralt'}
-          >
-            {isCollapsed ? '🔽' : '🔼'}
-          </button>
-          <button
-            className="text-red-600 hover:text-red-800"
-            onClick={onDelete}
-            title="Bölümü Sil"
-          >
-            🗑️
-          </button>
-        </div>
-      </div>
+  const getFieldTypeIcon = (type: FieldType) => {
+    const icons = {
+      text: <TextIcon size={18} />,
+      textarea: <Layout size={18} />,
+      date: <CalendarIcon size={18} />,
+      boolean: <ToggleLeft size={18} />,
+      select: <ListIcon size={18} />,
+      dynamicList: <List size={18} />
+    };
+    return icons[type] || <TextIcon size={18} />;
+  };
 
-      {!isCollapsed && (
-        <div className="p-4">
-          <div className="mb-4">
-            <label className="block mb-1 text-sm font-medium">Bölüm Açıklaması (Opsiyonel):</label>
+  return (
+    <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 transition-all duration-300 hover:shadow-xl">
+      <div className="bg-[#f3f1f0] p-6">
+        <div className="flex justify-between items-center">
+          <div className="flex-1">
+            <div className="flex items-center space-x-4">
+              <span className="font-medium text-[#292A2D] text-lg">Bölüm {index + 1}</span>
+              <input
+                type="text"
+                className="flex-1 px-4 py-2 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#292A2D] focus:border-transparent transition-all duration-300"
+                value={section.title[currentLanguage] || ''}
+                onChange={handleTitleChange}
+                placeholder={`Bölüm başlığını ${currentLanguage.toUpperCase()} dilinde girin`}
+              />
+            </div>
+          </div>
+          <div className="flex items-center space-x-2">
+            {!isFirst && (
+              <button
+                className="p-2 text-[#292A2D] hover:bg-white rounded-full transition-all duration-300"
+                onClick={() => onMove('up')}
+                title="Yukarı Taşı"
+              >
+                <ArrowUp size={20} />
+              </button>
+            )}
+            {!isLast && (
+              <button
+                className="p-2 text-[#292A2D] hover:bg-white rounded-full transition-all duration-300"
+                onClick={() => onMove('down')}
+                title="Aşağı Taşı"
+              >
+                <ArrowDown size={20} />
+              </button>
+            )}
+            <button
+              className="p-2 text-[#292A2D] hover:bg-white rounded-full transition-all duration-300"
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              title={isCollapsed ? 'Genişlet' : 'Daralt'}
+            >
+              {isCollapsed ? <ChevronDown size={20} /> : <ChevronUp size={20} />}
+            </button>
+            <button
+              className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-all duration-300"
+              onClick={onDelete}
+              title="Bölümü Sil"
+            >
+              <Trash2 size={20} />
+            </button>
+          </div>
+        </div>
+
+        {!isCollapsed && (
+          <div className="mt-4">
             <textarea
-              className="w-full p-2 border rounded"
+              className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#292A2D] focus:border-transparent transition-all duration-300"
               value={section.description?.[currentLanguage] || ''}
               onChange={handleDescriptionChange}
               placeholder={`Bölüm açıklamasını ${currentLanguage.toUpperCase()} dilinde girin (opsiyonel)`}
               rows={2}
             />
           </div>
+        )}
+      </div>
 
-          <div className="mb-4">
-            <h3 className="font-medium mb-2">Sorular</h3>
+      {!isCollapsed && (
+        <div className="p-6">
+          <div className="mb-6">
+            <h3 className="font-medium text-lg text-[#292A2D] mb-4">Sorular</h3>
             {section.fields.length === 0 ? (
-              <div className="p-4 bg-gray-50 rounded text-center text-gray-500">
-                Bu bölümde henüz hiç soru yok. Soru ekleyin.
+              <div className="p-8 bg-gray-50 rounded-xl text-center border-2 border-dashed border-gray-200">
+                <p className="text-gray-500 mb-4">Bu bölümde henüz hiç soru yok.</p>
+                <button
+                  className="inline-flex items-center px-4 py-2 bg-[#292A2D] text-white rounded-lg hover:bg-opacity-90 transition-all duration-300"
+                  onClick={() => handleAddField('text')}
+                >
+                  <Plus size={20} className="mr-2" />
+                  İlk Soruyu Ekle
+                </button>
               </div>
             ) : (
               <div className="space-y-4">
@@ -190,45 +206,26 @@ export const SectionBuilder: React.FC<SectionBuilderProps> = ({
             )}
           </div>
 
-          <div className="bg-gray-50 p-3 rounded">
-            <h4 className="font-medium mb-2">Soru Ekle</h4>
-            <div className="grid grid-cols-3 gap-2">
-              <button 
-                className="px-3 py-2 bg-blue-100 hover:bg-blue-200 rounded text-blue-800"
-                onClick={() => handleAddField('text')}
-              >
-                Metin
-              </button>
-              <button 
-                className="px-3 py-2 bg-blue-100 hover:bg-blue-200 rounded text-blue-800"
-                onClick={() => handleAddField('textarea')}
-              >
-                Geniş Metin
-              </button>
-              <button 
-                className="px-3 py-2 bg-blue-100 hover:bg-blue-200 rounded text-blue-800"
-                onClick={() => handleAddField('date')}
-              >
-                Tarih
-              </button>
-              <button 
-                className="px-3 py-2 bg-blue-100 hover:bg-blue-200 rounded text-blue-800"
-                onClick={() => handleAddField('boolean')}
-              >
-                Evet/Hayır
-              </button>
-              <button 
-                className="px-3 py-2 bg-blue-100 hover:bg-blue-200 rounded text-blue-800"
-                onClick={() => handleAddField('select')}
-              >
-                Çoktan Seçmeli
-              </button>
-              <button 
-                className="px-3 py-2 bg-blue-100 hover:bg-blue-200 rounded text-blue-800"
-                onClick={() => handleAddField('dynamicList')}
-              >
-                Dinamik Liste
-              </button>
+          <div className="bg-[#f3f1f0] p-6 rounded-xl">
+            <h4 className="font-medium text-[#292A2D] mb-4">Soru Ekle</h4>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {[
+                { type: 'text', label: 'Metin' },
+                { type: 'textarea', label: 'Geniş Metin' },
+                { type: 'date', label: 'Tarih' },
+                { type: 'boolean', label: 'Evet/Hayır' },
+                { type: 'select', label: 'Çoktan Seçmeli' },
+                { type: 'dynamicList', label: 'Dinamik Liste' }
+              ].map(({ type, label }) => (
+                <button 
+                  key={type}
+                  className="flex items-center justify-center space-x-2 px-4 py-3 bg-white hover:bg-gray-50 rounded-lg text-[#292A2D] transition-all duration-300 border border-gray-200"
+                  onClick={() => handleAddField(type as FieldType)}
+                >
+                  {getFieldTypeIcon(type as FieldType)}
+                  <span>{label}</span>
+                </button>
+              ))}
             </div>
           </div>
         </div>

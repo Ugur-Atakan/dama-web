@@ -1,18 +1,21 @@
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { useEffect, useMemo, useState } from 'react';
-import toast from 'react-hot-toast';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { logOut, setUserData } from '../store/slices/userSlice';
-import instance from '../http/instance';
-import { getUserTokens, removeTokens } from '../utils/storage';
-import AccessDenied from '../pages/AccessDenied';
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import toast from "react-hot-toast";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { logOut, setUserData } from "../store/slices/userSlice";
+import instance from "../http/instance";
+import { getUserTokens, removeTokens } from "../utils/storage";
+import AccessDenied from "../pages/AccessDenied";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRole?: string;
+  requiredRoles?: string[];
 }
 
-export default function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
+export default function ProtectedRoute({
+  children,
+  requiredRoles,
+}: ProtectedRouteProps) {
   const userData = useAppSelector((state) => state.user.userData);
   const location = useLocation();
   const dispatch = useAppDispatch();
@@ -22,19 +25,19 @@ export default function ProtectedRoute({ children, requiredRole }: ProtectedRout
 
   const navigate = useNavigate();
   const getUserData = async () => {
-    console.log('Getting user data');
+    console.log("Getting user data");
     try {
       setLoading(true);
-      const response = await instance.get('/users/me');
-      console.log('User data:', response.data);
+      const response = await instance.get("/users/me");
+      console.log("User data:", response.data);
       dispatch(setUserData(response.data));
       setLoading(false);
     } catch (error: any) {
       removeTokens();
       dispatch(logOut());
       toast.error("Could not retrieve user information. Please log back in.");
-      navigate('/');
-      console.error('Error fetching user data:', error);
+      navigate("/");
+      console.error("Error fetching user data:", error);
       setLoading(false);
     }
   };
@@ -46,14 +49,19 @@ export default function ProtectedRoute({ children, requiredRole }: ProtectedRout
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // if (!tokens) {
-  //   return <Navigate to="/" state={{ from: location }} replace />;
-  // }
+  if (!tokens) {
+    return <Navigate to="/admin/login" state={{ from: location }} replace />;
+  }
 
   if (loading) {
     return <p>Loading</p>;
   }
-  if (requiredRole && userData?.role !== requiredRole) {
+  // Rol kontrolü
+  if (
+    requiredRoles &&
+    (!userData?.roles ||
+      !requiredRoles.some((role) => userData.roles.includes(role)))
+  ) {
     return <AccessDenied />;
   }
 

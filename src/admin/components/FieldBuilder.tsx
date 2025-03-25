@@ -1,4 +1,3 @@
-// src/admin/components/FieldBuilder.tsx
 import React, { useState } from 'react';
 import { DynamicListFieldsBuilder } from './DynamicListFieldsBuilder';
 import { OptionBuilder } from './OptionBuilder';
@@ -10,6 +9,7 @@ import {
   DynamicListField, 
   FieldType 
 } from '../../types';
+import { ChevronDown, ChevronUp, ArrowUp, ArrowDown, Trash2, Settings, Eye } from 'lucide-react';
 
 interface FieldBuilderProps {
   field: FormField;
@@ -40,11 +40,8 @@ export const FieldBuilder: React.FC<FieldBuilderProps> = ({
   const [showConditionBuilder, setShowConditionBuilder] = useState<boolean>(false);
   const [showValidationBuilder, setShowValidationBuilder] = useState<boolean>(false);
 
-  // Soru sistem kodunu güncelle
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Olayın yukarı doğru yayılmasını engelliyoruz
     e.stopPropagation();
-    
     const newName = e.target.value.replace(/\s+/g, '_').toLowerCase();
     onUpdate({
       ...field,
@@ -52,18 +49,13 @@ export const FieldBuilder: React.FC<FieldBuilderProps> = ({
     });
   };
 
-  // Soru tipini güncelle
   const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    // Olayın yukarı doğru yayılmasını engelliyoruz
     e.stopPropagation();
-    
     const newType = e.target.value as FieldType;
     onUpdate({
       ...field,
       type: newType,
-      // Eğer select tipine geçiliyorsa ve options yoksa, varsayılan options ekleyelim
       options: newType === 'select' && !field.options ? [createNewOption()] : field.options,
-      // Eğer dynamicList tipine geçiliyorsa ve fields yoksa, varsayılan fields ekleyelim
       fields: newType === 'dynamicList' && !field.fields ? [
         {
           name: `subfield_${Date.now()}`,
@@ -78,11 +70,8 @@ export const FieldBuilder: React.FC<FieldBuilderProps> = ({
     });
   };
 
-  // Soru metnini güncelle
   const handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Olayın yukarı doğru yayılmasını engelliyoruz
     e.stopPropagation();
-    
     onUpdate({
       ...field,
       label: {
@@ -92,11 +81,8 @@ export const FieldBuilder: React.FC<FieldBuilderProps> = ({
     });
   };
 
-  // Örnek/İpucu metnini güncelle
   const handlePlaceholderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Olayın yukarı doğru yayılmasını engelliyoruz
     e.stopPropagation();
-    
     onUpdate({
       ...field,
       placeholder: {
@@ -106,18 +92,14 @@ export const FieldBuilder: React.FC<FieldBuilderProps> = ({
     });
   };
 
-  // Zorunlu soru güncelle
   const handleRequiredChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Olayın yukarı doğru yayılmasını engelliyoruz
     e.stopPropagation();
-    
     onUpdate({
       ...field,
       required: e.target.checked
     });
   };
 
-  // Soru seçeneklerini güncelle
   const handleOptionsUpdate = (updatedOptions: FormOption[]) => {
     onUpdate({
       ...field,
@@ -125,7 +107,6 @@ export const FieldBuilder: React.FC<FieldBuilderProps> = ({
     });
   };
 
-  // Soru koşullarını güncelle
   const handleConditionsUpdate = (updatedConditions: Condition[]) => {
     onUpdate({
       ...field,
@@ -133,7 +114,6 @@ export const FieldBuilder: React.FC<FieldBuilderProps> = ({
     });
   };
 
-  // Dinamik liste alt sorularını güncelle
   const handleDynamicListFieldsUpdate = (updatedFields: DynamicListField[]) => {
     onUpdate({
       ...field,
@@ -141,7 +121,6 @@ export const FieldBuilder: React.FC<FieldBuilderProps> = ({
     });
   };
 
-  // Doğrulama kurallarını güncelle
   const handleValidationUpdate = (key: string, value: any) => {
     onUpdate({
       ...field,
@@ -152,98 +131,102 @@ export const FieldBuilder: React.FC<FieldBuilderProps> = ({
     });
   };
 
-  // Daraltma/genişletme
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   };
 
-  // Koşul oluşturucu toggle
   const handleConditionBuilderToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowConditionBuilder(!showConditionBuilder);
   };
 
-  // Validasyon oluşturucu toggle
   const handleValidationBuilderToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowValidationBuilder(!showValidationBuilder);
   };
 
+  const getFieldTypeLabel = (type: FieldType): string => {
+    const types = {
+      text: 'Metin',
+      textarea: 'Geniş Metin',
+      date: 'Tarih',
+      boolean: 'Evet/Hayır',
+      select: 'Çoktan Seçmeli',
+      dynamicList: 'Dinamik Liste'
+    };
+    return types[type] || type;
+  };
+
   return (
-    <div className="border rounded overflow-hidden">
+    <div className="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-all duration-300">
       <div 
-        className="bg-gray-50 p-3 flex justify-between items-center cursor-pointer" 
+        className="bg-[#f3f1f0] p-4 flex justify-between items-center cursor-pointer transition-all duration-300 hover:bg-opacity-90"
         onClick={toggleCollapse}
       >
-        <div className="flex items-center">
-          <span className="font-medium text-gray-700 mr-2">Soru {index + 1}:</span>
-          <span className="mr-2">{field.label[currentLanguage] || field.name}</span>
-          <span className="px-2 py-1 bg-gray-200 rounded text-xs">
-            {field.type === 'text' && 'Metin'}
-            {field.type === 'textarea' && 'Geniş Metin'}
-            {field.type === 'date' && 'Tarih'}
-            {field.type === 'boolean' && 'Evet/Hayır'}
-            {field.type === 'select' && 'Çoktan Seçmeli'}
-            {field.type === 'dynamicList' && 'Dinamik Liste'}
+        <div className="flex items-center space-x-3">
+          <span className="font-medium text-[#292A2D]">Soru {index + 1}:</span>
+          <span className="text-[#292A2D]">{field.label[currentLanguage] || field.name}</span>
+          <span className="px-3 py-1 bg-white rounded-full text-xs font-medium text-[#292A2D]">
+            {getFieldTypeLabel(field.type)}
           </span>
         </div>
-        <div className="flex space-x-2">
+        <div className="flex items-center space-x-2">
           {!isFirst && (
             <button
-              className="text-gray-700 hover:text-blue-600"
+              className="p-2 text-[#292A2D] hover:bg-white rounded-full transition-all duration-300"
               onClick={(e) => {e.stopPropagation(); onMove('up');}}
               title="Yukarı Taşı"
             >
-              ⬆️
+              <ArrowUp size={18} />
             </button>
           )}
           {!isLast && (
             <button
-              className="text-gray-700 hover:text-blue-600"
+              className="p-2 text-[#292A2D] hover:bg-white rounded-full transition-all duration-300"
               onClick={(e) => {e.stopPropagation(); onMove('down');}}
               title="Aşağı Taşı"
             >
-              ⬇️
+              <ArrowDown size={18} />
             </button>
           )}
           <button
-            className="text-gray-700 hover:text-blue-600"
+            className="p-2 text-[#292A2D] hover:bg-white rounded-full transition-all duration-300"
             onClick={(e) => {e.stopPropagation(); setIsCollapsed(!isCollapsed);}}
             title={isCollapsed ? "Genişlet" : "Daralt"}
           >
-            {isCollapsed ? '🔽' : '🔼'}
+            {isCollapsed ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
           </button>
           <button
-            className="text-red-600 hover:text-red-800"
+            className="p-2 text-red-500 hover:bg-red-50 rounded-full transition-all duration-300"
             onClick={(e) => {e.stopPropagation(); onDelete();}}
             title="Soruyu Sil"
           >
-            🗑️
+            <Trash2 size={18} />
           </button>
         </div>
       </div>
 
       {!isCollapsed && (
-        <div className="p-4" onClick={(e) => e.stopPropagation()}>
-          <div className="grid grid-cols-2 gap-4 mb-4">
+        <div className="p-6" onClick={(e) => e.stopPropagation()}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
-              <label className="block mb-1 text-sm font-medium">Soru Sistem Kodu:</label>
+              <label className="block mb-2 text-sm font-medium text-gray-700">Soru Sistem Kodu:</label>
               <input
                 type="text"
-                className="w-full p-2 border rounded"
+                className="w-full p-3 border border-gray-200 rounded-lg bg-white focus:ring-2 focus:ring-[#292A2D] focus:border-transparent transition-all duration-300"
                 value={field.name}
                 onChange={handleNameChange}
                 onClick={(e) => e.stopPropagation()}
                 placeholder="Soru için sistem kodu (otomatik oluşturulur)"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="mt-2 text-xs text-gray-500">
                 Bu kod, sistem tarafında kullanılacaktır. Otomatik oluşturulur, değiştirmeniz gerekmez.
               </p>
             </div>
             <div>
-              <label className="block mb-1 text-sm font-medium">Soru Tipi:</label>
+              <label className="block mb-2 text-sm font-medium text-gray-700">Soru Tipi:</label>
               <select
-                className="w-full p-2 border rounded"
+                className="w-full p-3 border border-gray-200 rounded-lg bg-white focus:ring-2 focus:ring-[#292A2D] focus:border-transparent transition-all duration-300"
                 value={field.type}
                 onChange={handleTypeChange}
                 onClick={(e) => e.stopPropagation()}
@@ -258,12 +241,14 @@ export const FieldBuilder: React.FC<FieldBuilderProps> = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div>
-              <label className="block mb-1 text-sm font-medium">Soru Metni ({currentLanguage.toUpperCase()}):</label>
+              <label className="block mb-2 text-sm font-medium text-gray-700">
+                Soru Metni ({currentLanguage.toUpperCase()}):
+              </label>
               <input
                 type="text"
-                className="w-full p-2 border rounded"
+                className="w-full p-3 border border-gray-200 rounded-lg bg-white focus:ring-2 focus:ring-[#292A2D] focus:border-transparent transition-all duration-300"
                 value={field.label[currentLanguage] || ''}
                 onChange={handleLabelChange}
                 onClick={(e) => e.stopPropagation()}
@@ -272,10 +257,12 @@ export const FieldBuilder: React.FC<FieldBuilderProps> = ({
             </div>
             {(field.type === 'text' || field.type === 'textarea') && (
               <div>
-                <label className="block mb-1 text-sm font-medium">Örnek/İpucu ({currentLanguage.toUpperCase()}):</label>
+                <label className="block mb-2 text-sm font-medium text-gray-700">
+                  Örnek/İpucu ({currentLanguage.toUpperCase()}):
+                </label>
                 <input
                   type="text"
-                  className="w-full p-2 border rounded"
+                  className="w-full p-3 border border-gray-200 rounded-lg bg-white focus:ring-2 focus:ring-[#292A2D] focus:border-transparent transition-all duration-300"
                   value={field.placeholder?.[currentLanguage] || ''}
                   onChange={handlePlaceholderChange}
                   onClick={(e) => e.stopPropagation()}
@@ -285,119 +272,133 @@ export const FieldBuilder: React.FC<FieldBuilderProps> = ({
             )}
           </div>
 
-          <div className="mb-4">
-            <label className="flex items-center text-sm">
+          <div className="mb-6">
+            <label className="inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
-                className="mr-2"
+                className="w-5 h-5 text-[#292A2D] border-gray-300 rounded focus:ring-[#292A2D] transition-all duration-300"
                 checked={field.required || false}
                 onChange={handleRequiredChange}
                 onClick={(e) => e.stopPropagation()}
               />
-              Zorunlu soru
+              <span className="ml-2 text-sm text-gray-700">Zorunlu soru</span>
             </label>
           </div>
 
-          {/* Doğrulama Kuralları */}
-          <div className="mb-4">
-            <div className="flex justify-between items-center mb-2">
-              <h4 className="font-medium">Doğrulama Kuralları (Opsiyonel)</h4>
-              <button
-                className="text-blue-600 text-sm"
-                onClick={handleValidationBuilderToggle}
-              >
-                {showValidationBuilder ? 'Gizle' : 'Göster'}
-              </button>
+          <div className="space-y-6">
+            <div className="border border-gray-200 rounded-lg overflow-hidden">
+              <div className="flex justify-between items-center p-4 bg-gray-50">
+                <div className="flex items-center space-x-2">
+                  <Settings size={18} className="text-gray-600" />
+                  <h4 className="font-medium text-gray-700">Doğrulama Kuralları (Opsiyonel)</h4>
+                </div>
+                <button
+                  className="text-[#292A2D] hover:text-opacity-80 text-sm font-medium transition-all duration-300"
+                  onClick={handleValidationBuilderToggle}
+                >
+                  {showValidationBuilder ? 'Gizle' : 'Göster'}
+                </button>
+              </div>
+              
+              {showValidationBuilder && (
+                <div className="p-4 border-t border-gray-200">
+                  {(field.type === 'text' || field.type === 'textarea') && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block mb-2 text-sm font-medium text-gray-700">Minimum Uzunluk:</label>
+                        <input
+                          type="number"
+                          className="w-full p-3 border border-gray-200 rounded-lg bg-white focus:ring-2 focus:ring-[#292A2D] focus:border-transparent transition-all duration-300"
+                          min="0"
+                          value={field.validation?.minLength || ''}
+                          onChange={(e) => handleValidationUpdate('minLength', parseInt(e.target.value) || '')}
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                      </div>
+                      <div>
+                        <label className="block mb-2 text-sm font-medium text-gray-700">Maksimum Uzunluk:</label>
+                        <input
+                          type="number"
+                          className="w-full p-3 border border-gray-200 rounded-lg bg-white focus:ring-2 focus:ring-[#292A2D] focus:border-transparent transition-all duration-300"
+                          min="0"
+                          value={field.validation?.maxLength || ''}
+                          onChange={(e) => handleValidationUpdate('maxLength', parseInt(e.target.value) || '')}
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="block mb-2 text-sm font-medium text-gray-700">Pattern (RegEx):</label>
+                        <input
+                          type="text"
+                          className="w-full p-3 border border-gray-200 rounded-lg bg-white focus:ring-2 focus:ring-[#292A2D] focus:border-transparent transition-all duration-300"
+                          value={field.validation?.pattern || ''}
+                          onChange={(e) => handleValidationUpdate('pattern', e.target.value)}
+                          onClick={(e) => e.stopPropagation()}
+                          placeholder="Örn: ^[A-Za-z0-9]+$"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-            
-            {showValidationBuilder && (
-              <div className="bg-gray-50 p-3 rounded">
-                {(field.type === 'text' || field.type === 'textarea') && (
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block mb-1 text-xs">Minimum Uzunluk:</label>
-                      <input
-                        type="number"
-                        className="w-full p-2 border rounded"
-                        min="0"
-                        value={field.validation?.minLength || ''}
-                        onChange={(e) => handleValidationUpdate('minLength', parseInt(e.target.value) || '')}
-                        onClick={(e) => e.stopPropagation()}
-                      />
-                    </div>
-                    <div>
-                      <label className="block mb-1 text-xs">Maksimum Uzunluk:</label>
-                      <input
-                        type="number"
-                        className="w-full p-2 border rounded"
-                        min="0"
-                        value={field.validation?.maxLength || ''}
-                        onChange={(e) => handleValidationUpdate('maxLength', parseInt(e.target.value) || '')}
-                        onClick={(e) => e.stopPropagation()}
-                      />
-                    </div>
-                    <div>
-                      <label className="block mb-1 text-xs">Pattern (RegEx):</label>
-                      <input
-                        type="text"
-                        className="w-full p-2 border rounded"
-                        value={field.validation?.pattern || ''}
-                        onChange={(e) => handleValidationUpdate('pattern', e.target.value)}
-                        onClick={(e) => e.stopPropagation()}
-                        placeholder="Örn: ^[A-Za-z0-9]+$"
-                      />
-                    </div>
-                  </div>
-                )}
+
+            <div className="border border-gray-200 rounded-lg overflow-hidden">
+              <div className="flex justify-between items-center p-4 bg-gray-50">
+                <div className="flex items-center space-x-2">
+                  <Eye size={18} className="text-gray-600" />
+                  <h4 className="font-medium text-gray-700">Koşullu Gösterim (Opsiyonel)</h4>
+                </div>
+                <button
+                  className="text-[#292A2D] hover:text-opacity-80 text-sm font-medium transition-all duration-300"
+                  onClick={handleConditionBuilderToggle}
+                >
+                  {showConditionBuilder ? 'Gizle' : 'Göster'}
+                </button>
+              </div>
+              
+              {showConditionBuilder && (
+                <div className="p-4 border-t border-gray-200">
+                  <ConditionBuilder
+                    conditions={field.conditions || []}
+                    availableFields={allFieldNames}
+                    onChange={handleConditionsUpdate}
+                  />
+                </div>
+              )}
+            </div>
+
+            {field.type === 'select' && (
+              <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <div className="p-4 bg-gray-50">
+                  <h4 className="font-medium text-gray-700">Seçenekler</h4>
+                </div>
+                <div className="p-4 border-t border-gray-200">
+                  <OptionBuilder
+                    options={field.options || []}
+                    onChange={handleOptionsUpdate}
+                    currentLanguage={currentLanguage}
+                    createNewOption={createNewOption}
+                  />
+                </div>
+              </div>
+            )}
+
+            {field.type === 'dynamicList' && (
+              <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <div className="p-4 bg-gray-50">
+                  <h4 className="font-medium text-gray-700">Alt Sorular</h4>
+                </div>
+                <div className="p-4 border-t border-gray-200">
+                  <DynamicListFieldsBuilder
+                    fields={field.fields || []}
+                    onChange={handleDynamicListFieldsUpdate}
+                    currentLanguage={currentLanguage}
+                  />
+                </div>
               </div>
             )}
           </div>
-
-          {/* Koşullu Gösterim */}
-          <div className="mb-4">
-            <div className="flex justify-between items-center mb-2">
-              <h4 className="font-medium">Koşullu Gösterim (Opsiyonel)</h4>
-              <button
-                className="text-blue-600 text-sm"
-                onClick={handleConditionBuilderToggle}
-              >
-                {showConditionBuilder ? 'Gizle' : 'Göster'}
-              </button>
-            </div>
-            
-            {showConditionBuilder && (
-              <ConditionBuilder
-                conditions={field.conditions || []}
-                availableFields={allFieldNames}
-                onChange={handleConditionsUpdate}
-              />
-            )}
-          </div>
-
-          {/* Seçenek Oluşturucu (select tipi için) */}
-          {field.type === 'select' && (
-            <div className="mb-4">
-              <h4 className="font-medium mb-2">Seçenekler</h4>
-              <OptionBuilder
-                options={field.options || []}
-                onChange={handleOptionsUpdate}
-                currentLanguage={currentLanguage}
-                createNewOption={createNewOption}
-              />
-            </div>
-          )}
-
-          {/* Dinamik Liste Alt Soruları Oluşturucu */}
-          {field.type === 'dynamicList' && (
-            <div className="mb-4">
-              <h4 className="font-medium mb-2">Alt Sorular</h4>
-              <DynamicListFieldsBuilder
-                fields={field.fields || []}
-                onChange={handleDynamicListFieldsUpdate}
-                currentLanguage={currentLanguage}
-              />
-            </div>
-          )}
         </div>
       )}
     </div>

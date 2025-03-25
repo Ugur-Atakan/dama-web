@@ -1,9 +1,10 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
+import { Tokens, User, UserInterface } from '../../types/User';
 
 interface UserState {
   isLoggedIn: boolean;
-  userData: any;
-  tokens:any
+  userData: User;
+  tokens:Tokens
 }
 
 const initialState: UserState = {
@@ -13,7 +14,11 @@ const initialState: UserState = {
     firstName: '',
     lastName: '',
     email: '',
-    role:'',
+    roles: [],
+    loginProvider:'',
+    applications: [],
+    appointments: [],
+    createdAt: '',
   },
   tokens: {
     accessToken: '',
@@ -26,7 +31,7 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    login: (state, action: PayloadAction<any>) => {
+    login: (state, action: PayloadAction<UserInterface>) => {
       state.userData = action.payload.user;
       state.isLoggedIn = true;
     },
@@ -34,7 +39,7 @@ export const userSlice = createSlice({
       state.userData = initialState.userData;
       state.isLoggedIn = false;
     },
-    setUserData: (state, action: PayloadAction<any>) => {
+    setUserData: (state, action: PayloadAction<User>) => {
       state.userData = action.payload;
     },
     updateUser: (state, action: PayloadAction<any>) => {
