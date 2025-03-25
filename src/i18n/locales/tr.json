@@ -1,0 +1,164 @@
+{
+  "languageSelection": {
+    "title": "Dil Seçimi",
+    "subtitle": "Lütfen tercih ettiğiniz dili seçin",
+    "continue": "Devam Et",
+    "selected": "Seçildi"
+  },
+  "languages": {
+    "tr": "Türkçe",
+    "en": "İngilizce"
+  },
+  "intro": {
+    "welcome": "DAMA Advisors'a Hoş Geldiniz",
+    "description": "Defense Base Act (DBA) talepleri konusunda uzmanlaşmış, iş yerinde yaralanma veya hastalık yaşayan çalışanlara hukuki destek sağlıyoruz.",
+    "expertise": "DBA Uzmanlığı",
+    "expertiseDesc": "Ekibimiz, karmaşık DBA davalarında geniş deneyime sahip olup, süreç boyunca haklarınızın korunmasını sağlar.",
+    "support": "Kapsamlı Destek",
+    "supportDesc": "İlk başvurudan nihai karara kadar, davanıza özel ilgiyle tüm süreç boyunca size rehberlik ediyoruz.",
+    "newApplication": "Yeni Başvuru",
+    "login": "Giriş Yap",
+    "or": "veya"
+  },
+  "requirements": {
+    "back": "Geri Dön",
+    "title": "Başvuru Gereksinimleri",
+    "description": "Başvurunuzu tamamlayabilmek için aşağıdaki belgelere ihtiyacımız olacak. Lütfen devam etmeden önce bu belgeleri hazır bulundurduğunuzdan emin olun.",
+    "warning": "Gerekli belgeleri yükleyememeniz durumunda başvurunuz tamamlanamayabilir veya işlem süreci uzayabilir.",
+    "documents": [
+      {
+        "title": "Pasaport ve Yurt Dışı Giriş-Çıkış Kayıtları",
+        "description": "Üslerde çalıştığınız dönemdeki pasaportunuz ve yurt dışı giriş-çıkış belgeleriniz"
+      },
+      {
+        "title": "İstihdam Belgeleri",
+        "description": "Çalıştığınız firmayı ve pozisyonunuzu gösteren belgeler (iş sözleşmesi, görev yazıları vb.)"
+      },
+      {
+        "title": "Takdir ve Teşekkür Belgeleri",
+        "description": "Varsa, iş yerinde aldığınız takdir, teşekkür veya başarı belgeleri"
+      },
+      {
+        "title": "Ödeme Kayıtları",
+        "description": "Maaş ödemelerinizi gösteren banka dekontları veya ödeme kayıtları"
+      }
+    ],
+    "continue": "Belgeleri Hazırladım, Devam Et",
+    "note": "Tüm belgeler güvenli bir şekilde saklanacak ve sadece başvurunuz için kullanılacaktır."
+  },
+  "whatsapp": {
+    "back": "Geri Dön",
+    "title": "Telefon Doğrulama",
+    "description": "WhatsApp doğrulama kodu almak için lütfen telefon numaranızı girin",
+    "phoneLabel": "Telefon Numarası",
+    "continue": "Devam Et",
+    "otpTitle": "Doğrulama Kodunu Girin",
+    "otpDescription": "WhatsApp'ınıza 4 haneli bir kod gönderdik",
+    "sentTo": "Kod gönderilen numara",
+    "otpValidity": "Kodun geçerlilik süresi",
+    "verify": "Kodu Doğrula"
+  },
+  "incidentForm": {
+    "back": "Geri Dön",
+    "title": "Yaşadığınız Olayı Anlatın",
+    "description": "Üslerde çalıştığınız süre boyunca yaşadığınız olayı detaylı bir şekilde anlatmanız, başvurunuzun değerlendirilmesi için çok önemlidir.",
+    "label": "Olay Açıklaması",
+    "showTips": "İpuçlarını Göster",
+    "tipsTitle": "Açıklamanızı yazarken dikkat edilecek noktalar:",
+    "tips": [
+      "Olayın tam tarihini (gün/ay/yıl) belirtmeye çalışın",
+      "Olayın gerçekleştiği yeri (hangi üs, hangi bölüm) açıklayın",
+      "Olay sırasında yanınızda olan kişilerin isimlerini yazın",
+      "Yaşadığınız sağlık sorunlarını detaylı olarak anlatın",
+      "Olay sonrası aldığınız tedavileri ve gittiğiniz hastaneleri belirtin"
+    ],
+    "placeholder": "Lütfen yaşadığınız olayı detaylı bir şekilde anlatın...",
+    "minChars": "Minimum 100 karakter gerekli",
+    "continue": "Devam Et"
+  },
+  "passportUpload": {
+    "back": "Geri Dön",
+    "title": "Pasaport ve Seyahat Belgeleriniz",
+    "description": "Üslerde çalıştığınız döneme ait pasaport sayfalarınızı ve yurt dışı giriş-çıkış kayıtlarınızı yükleyin.",
+    "warning": "Pasaportunuzun kimlik bilgileri sayfası ve üslerde çalıştığınız döneme ait giriş-çıkış damgalarının olduğu sayfalar mutlaka gereklidir.",
+    "dropzone": {
+      "title": "Dosyaları buraya sürükleyin veya seçin",
+      "subtitle": "PDF veya resim dosyaları kabul edilmektedir"
+    },
+    "uploadedFiles": "Yüklenen Belgeler",
+    "continue": "Devam Et"
+  },
+  "employmentUpload": {
+    "back": "Geri Dön",
+    "title": "İstihdam Belgeleriniz",
+    "description": "Üslerde çalıştığınız firmayı ve pozisyonunuzu gösteren belgeleri yükleyin.",
+    "important": "Önemli Not",
+    "warning": "İş sözleşmesi veya görev yazısı gibi belgeler başvurunuzun değerlendirilmesinde önemli rol oynayacaktır.",
+    "showExamples": "Hangi belgeleri yükleyebilirim?",
+    "examples": {
+      "title": "Yükleyebileceğiniz belge örnekleri:",
+      "list": [
+        "İş sözleşmesi",
+        "Görev yazıları veya atama belgeleri",
+        "İşe başlama/işten ayrılma yazıları",
+        "Çalışma belgesi veya hizmet dökümü",
+        "Firma tarafından verilen kimlik kartı",
+        "Varsa, iş tanımınızı gösteren belgeler",
+        "E-posta yazışmaları veya iş teklif mektupları"
+      ]
+    },
+    "dropzone": {
+      "title": "Dosyaları buraya sürükleyin veya seçin",
+      "subtitle": "PDF veya resim dosyaları kabul edilmektedir"
+    },
+    "uploadedFiles": "Yüklenen Belgeler",
+    "continue": "Devam Et"
+  },
+  "recognitionUpload": {
+    "back": "Geri Dön",
+    "title": "Takdir ve Teşekkür Belgeleriniz",
+    "description": "Üslerde çalıştığınız süre boyunca aldığınız takdir, teşekkür veya başarı belgeleriniz var mı?",
+    "hasDocuments": "Evet, belgelerim var",
+    "hasDocumentsDesc": "Takdir, teşekkür veya başarı belgelerim mevcut",
+    "noDocuments": "Hayır, belgem yok",
+    "noDocumentsDesc": "Herhangi bir takdir veya teşekkür belgesi almadım",
+    "uploadTitle": "Takdir ve Teşekkür Belgelerinizi Yükleyin",
+    "uploadDescription": "Sahip olduğunuz takdir, teşekkür veya başarı belgelerinizi yükleyin.",
+    "dropzone": {
+      "title": "Dosyaları buraya sürükleyin veya seçin",
+      "subtitle": "PDF veya resim dosyaları kabul edilmektedir"
+    },
+    "uploadedFiles": "Yüklenen Belgeler",
+    "continue": "Devam Et"
+  },
+  "paymentUpload": {
+    "back": "Geri Dön",
+    "title": "Ödeme ve Maaş Kayıtları",
+    "description": "Üslerde çalıştığınız dönemde aldığınız ödemelere ait banka dekontları veya maaş bordroları gibi belgeleri yükleyin.",
+    "important": "Önemli Bilgi",
+    "warning": "Maaş ödemelerinize ait belgeler başvurunuzun değerlendirilmesinde çok önemli bir rol oynayacaktır. Bu belgeleri bulamıyorsanız bile başvurunuza devam edebilirsiniz.",
+    "showExamples": "Hangi belgeleri yükleyebilirim?",
+    "examples": {
+      "title": "Yükleyebileceğiniz belge örnekleri:",
+      "list": [
+        "Banka hesap hareketleri",
+        "Maaş bordroları",
+        "Ödeme dekontları",
+        "Banka hesap özeti",
+        "Maaş yatırıldığını gösteren SMS veya e-posta bildirimleri",
+        "Ödeme makbuzları",
+        "Varsa, ek ödemelere ait belgeler"
+      ]
+    },
+    "dropzone": {
+      "title": "Dosyaları buraya sürükleyin veya seçin",
+      "subtitle": "PDF veya resim dosyaları kabul edilmektedir"
+    },
+    "uploadedFiles": "Yüklenen Belgeler",
+    "continue": "Devam Et"
+  },
+  "common": {
+    "show": "Göster",
+    "hide": "Gizle"
+  }
+}
