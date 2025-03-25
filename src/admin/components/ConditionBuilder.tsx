@@ -1,6 +1,6 @@
 // src/admin/components/ConditionBuilder.tsx
 import React from 'react';
-import { Condition } from '../types';
+import { Condition } from '../../types';
 
 interface ConditionBuilderProps {
   conditions: Condition[];
