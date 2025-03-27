@@ -1,19 +1,52 @@
+// AppRoutes.jsx
 import { Routes, Route, Navigate } from "react-router-dom";
-import AdminRoutes from "./AdminRoutes";
-import UserRoutes from "./UserRoutes";
-import AdminLogin from "../admin/pages/AdminLogin";
-import UserLogin from "../pages/Login";
+import AdminLayout from "../layouts/AdminLayout";
+import ProtectedRoute from "./ProtectedRoute";
+import LoginPage from "../pages/admin/components/auth/LoginPage";
+import DashboardPage from "../pages/admin/components/dashboard/DashboardPage";
+import ApplicationsPage from "../pages/admin/components/applications/ApplicationsPage";
+import ClientsPage from "../pages/admin/components/clients/ClientsPage";
+import AppointmentsPage from "../pages/admin/components/appointments/AppointmentsPage";
+import Settings from "../pages/admin/components/settings";
+import PreApplicationForm from "../pages/PreApplicationForm";
+import ApplicationForm from "../pages/ApplicationForm";
+import NotificationsPage from "../pages/admin/components/notifications";
 
 export default function AppRoutes() {
   return (
     <Routes>
-      {/* Ana sayfa yönlendirmesini ekleyin */}
-      <Route path="/login" element={<UserLogin />} />
-      <Route path="/user/*" element={<UserRoutes />} />
-      <Route path="/admin/*" element={<AdminRoutes />} />
-      <Route path="/admin/login" element={<AdminLogin />} />
-      <Route path="*" element={<Navigate to="/login" replace />} />
-
+      {/* Public route */}
+      <Route path="/admin/login" element={<LoginPage />} />
+      
+      {/* Admin routes */}
+      <Route path="/admin" element={
+        <ProtectedRoute>
+          <AdminLayout />
+        </ProtectedRoute>
+      }>
+        <Route index element={<DashboardPage />} />
+        <Route path="applications" element={<ApplicationsPage />} />
+        <Route path="clients" element={<ClientsPage />} />
+        <Route path="appointments" element={<AppointmentsPage />} />
+        <Route path="settings" element={<Settings />} />
+        <Route path="notifications" element={<NotificationsPage/>} />
+      </Route>
+      
+      {/* User routes */}
+      <Route path="/forms/pre-application" element={
+        <ProtectedRoute>
+          <PreApplicationForm />
+        </ProtectedRoute>
+      } />
+      <Route path="/forms/application-form" element={
+        <ProtectedRoute>
+          <ApplicationForm />
+        </ProtectedRoute>
+      } />
+      
+      {/* Redirects */}
+      <Route path="/" element={<Navigate to="/forms/pre-application" replace />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

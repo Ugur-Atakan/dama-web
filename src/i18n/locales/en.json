@@ -58,6 +58,21 @@
     "otpValidity": "Code valid for",
     "verify": "Verify Code"
   },
+  "contactInfo": {
+    "back": "Go Back",
+    "title": "Contact Information",
+    "description": "Please provide your contact details",
+    "firstName": "First Name",
+    "firstNamePlaceholder": "Enter your first name",
+    "lastName": "Last Name",
+    "lastNamePlaceholder": "Enter your last name",
+    "birthDate": "Date of Birth",
+    "birthDateNote": "You must be at least 18 years old",
+    "email": "Email Address",
+    "emailPlaceholder": "Enter your email address",
+    "emailOptional": "Email address is optional",
+    "continue": "Continue"
+  },
   "incidentForm": {
     "back": "Go Back",
     "title": "Describe Your Incident",
@@ -157,8 +172,36 @@
     "uploadedFiles": "Uploaded Documents",
     "continue": "Continue"
   },
+  "summary": {
+    "back": "Go Back",
+    "title": "Application Summary",
+    "description": "Please review your application details before submitting",
+    "edit": "Edit",
+    "submit": "Submit Application",
+    "sections": {
+      "contact": "Contact Number",
+      "personalInfo": "Personal Information",
+      "incident": "Incident Description",
+      "passport": "Passport Documents",
+      "employment": "Employment Documents",
+      "recognition": "Recognition Documents",
+      "payment": "Payment Records"
+    },
+    "filesUploaded": "{{count}} files uploaded",
+    "noDocuments": "No documents provided"
+  },
+  "success": {
+    "title": "Application Submitted Successfully",
+    "description": "Thank you for submitting your application. Our team will review your information and contact you soon.",
+    "note": "Please keep your phone available as we will contact you via WhatsApp for any additional information or updates regarding your application."
+  },
   "common": {
     "show": "Show",
-    "hide": "Hide"
+    "hide": "Hide",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "showMore": "Show more",
+    "showLess": "Show less"
   }
 }

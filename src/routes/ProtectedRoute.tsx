@@ -49,9 +49,9 @@ export default function ProtectedRoute({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (!tokens) {
-    return <Navigate to="/admin/login" state={{ from: location }} replace />;
-  }
+  // if (!tokens) {
+  //   return <Navigate to="/" state={{ from: location }} replace />;
+  // }
 
   if (loading) {
     return <p>Loading</p>;

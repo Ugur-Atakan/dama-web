@@ -58,6 +58,21 @@
     "otpValidity": "Kodun geçerlilik süresi",
     "verify": "Kodu Doğrula"
   },
+  "contactInfo": {
+    "back": "Geri Dön",
+    "title": "İletişim Bilgileri",
+    "description": "Lütfen iletişim bilgilerinizi girin",
+    "firstName": "Ad",
+    "firstNamePlaceholder": "Adınızı girin",
+    "lastName": "Soyad",
+    "lastNamePlaceholder": "Soyadınızı girin",
+    "birthDate": "Doğum Tarihi",
+    "birthDateNote": "18 yaşından büyük olmanız gerekmektedir",
+    "email": "E-posta Adresi",
+    "emailPlaceholder": "E-posta adresinizi girin",
+    "emailOptional": "E-posta adresi zorunlu değildir",
+    "continue": "Devam Et"
+  },
   "incidentForm": {
     "back": "Geri Dön",
     "title": "Yaşadığınız Olayı Anlatın",
@@ -157,8 +172,37 @@
     "uploadedFiles": "Yüklenen Belgeler",
     "continue": "Devam Et"
   },
+  "summary": {
+    "back": "Geri Dön",
+    "title": "Başvuru Özeti",
+    "description": "Lütfen başvuru bilgilerinizi göndermeden önce kontrol edin",
+    "edit": "Düzenle",
+    "submit": "Başvuruyu Gönder",
+    "sections": {
+      "contact": "İletişim Numarası",
+      "personalInfo": "Kişisel Bilgiler",
+      "incident": "Olay Açıklaması",
+      "passport": "Pasaport Belgeleri",
+      "employment": "İstihdam Belgeleri",
+      "recognition": "Takdir Belgeleri",
+      "payment": "Ödeme Kayıtları"
+    },
+    "filesUploaded": "{{count}} dosya yüklendi",
+    "noDocuments": "Belge yüklenmedi"
+  },
+  "success": {
+    "title": "Başvurunuz Başarıyla Gönderildi",
+    "description": "Başvurunuz için teşekkür ederiz. Ekibimiz bilgilerinizi inceleyecek ve en kısa sürede sizinle iletişime geçecektir.",
+    "note": "Başvurunuzla ilgili ek bilgi veya güncellemeler için WhatsApp üzerinden sizinle iletişime geçeceğimizden, lütfen telefonunuzu ulaşılabilir durumda tutun."
+  },
   "common": {
+    "back":"Geri Dön",
     "show": "Göster",
-    "hide": "Gizle"
+    "hide": "Gizle",
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "delete": "Sil",
+    "showMore": "Devamını göster",
+    "showLess": "Daha az göster"
   }
 }

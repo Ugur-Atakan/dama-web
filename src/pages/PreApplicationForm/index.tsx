@@ -1,0 +1,165 @@
+import { useState } from 'react';
+import IntroPage from './components/IntroPage';
+import RequirementsPage from './components/RequirementsPage';
+import WhatsAppVerification from './components/WhatsAppVerification';
+import ContactInfoPage from './components/ContactInfoPage';
+import IncidentForm from './components/IncidentForm';
+import PassportUpload from './components/PassportUpload';
+import EmploymentUpload from './components/EmploymentUpload';
+import RecognitionUpload from './components/RecognitionUpload';
+import PaymentUpload from './components/PaymentUpload';
+import ApplicationSummary from './components/ApplicationSummary';
+import SuccessPage from './components/SuccessPage';
+import LanguageSelector from '../../components/LanguageSelector';
+
+export default function PreApplicationForm() {
+  const [currentPage, setCurrentPage] = useState<'language' | 'intro' | 'requirements' | 'whatsapp' | 'contact' | 'incident' | 'passport' | 'employment' | 'recognition' | 'payment' | 'summary' | 'success'>('language');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [contactInfo, setContactInfo] = useState<{ firstName: string; lastName: string; email?: string } | null>(null);
+  const [incidentDescription, setIncidentDescription] = useState('');
+  const [passportFiles, setPassportFiles] = useState<File[]>([]);
+  const [employmentFiles, setEmploymentFiles] = useState<File[]>([]);
+  const [recognitionInfo, setRecognitionInfo] = useState<{ hasDocuments: boolean; files: File[] }>({ hasDocuments: false, files: [] });
+  const [paymentFiles, setPaymentFiles] = useState<File[]>([]);
+
+  const handleSubmitApplication = () => {
+    // Here you would typically send the data to your backend
+    setCurrentPage('success');
+  };
+
+  const handleUpdateData = (newData: Partial<{
+    contactInfo: { firstName: string; lastName: string; email?: string };
+    incidentDescription: string;
+    passportFiles: File[];
+    employmentFiles: File[];
+    recognitionInfo: { hasDocuments: boolean; files: File[] };
+    paymentFiles: File[];
+  }>) => {
+    if (newData.contactInfo) {
+      setContactInfo(newData.contactInfo);
+    }
+    if (newData.incidentDescription) {
+      setIncidentDescription(newData.incidentDescription);
+    }
+    if (newData.passportFiles) {
+      setPassportFiles(newData.passportFiles);
+    }
+    if (newData.employmentFiles) {
+      setEmploymentFiles(newData.employmentFiles);
+    }
+    if (newData.recognitionInfo) {
+      setRecognitionInfo(newData.recognitionInfo);
+    }
+    if (newData.paymentFiles) {
+      setPaymentFiles(newData.paymentFiles);
+    }
+  };
+
+  const renderPage = () => {
+    switch (currentPage) {
+      case 'language':
+        return <LanguageSelector onContinue={() => setCurrentPage('intro')} />;
+      case 'intro':
+        return <IntroPage onNewApplication={() => setCurrentPage('requirements')} />;
+      case 'requirements':
+        return (
+          <RequirementsPage
+            onBack={() => setCurrentPage('intro')}
+            onContinue={() => setCurrentPage('whatsapp')}
+          />
+        );
+      case 'whatsapp':
+        return (
+          <WhatsAppVerification
+            onBack={() => setCurrentPage('requirements')}
+            onContinue={(phone) => {
+              setPhoneNumber(phone);
+              setCurrentPage('contact');
+            }}
+          />
+        );
+      case 'contact':
+        return (
+          <ContactInfoPage
+            onBack={() => setCurrentPage('whatsapp')}
+            onContinue={(info) => {
+              setContactInfo(info);
+              setCurrentPage('incident');
+            }}
+          />
+        );
+      case 'incident':
+        return (
+          <IncidentForm
+            onBack={() => setCurrentPage('contact')}
+            onContinue={(description) => {
+              setIncidentDescription(description);
+              setCurrentPage('passport');
+            }}
+          />
+        );
+      case 'passport':
+        return (
+          <PassportUpload
+            onBack={() => setCurrentPage('incident')}
+            onContinue={(files) => {
+              setPassportFiles(files);
+              setCurrentPage('employment');
+            }}
+          />
+        );
+      case 'employment':
+        return (
+          <EmploymentUpload
+            onBack={() => setCurrentPage('passport')}
+            onContinue={(files) => {
+              setEmploymentFiles(files);
+              setCurrentPage('recognition');
+            }}
+          />
+        );
+      case 'recognition':
+        return (
+          <RecognitionUpload
+            onBack={() => setCurrentPage('employment')}
+            onContinue={(hasDocuments, files) => {
+              setRecognitionInfo({ hasDocuments, files });
+              setCurrentPage('payment');
+            }}
+          />
+        );
+      case 'payment':
+        return (
+          <PaymentUpload
+            onBack={() => setCurrentPage('recognition')}
+            onContinue={(files) => {
+              setPaymentFiles(files);
+              setCurrentPage('summary');
+            }}
+          />
+        );
+      case 'summary':
+        return (
+          <ApplicationSummary
+            onBack={() => setCurrentPage('payment')}
+            onSubmit={handleSubmitApplication}
+            data={{
+              contactInfo: contactInfo!,
+              incidentDescription,
+              passportFiles,
+              employmentFiles,
+              recognitionInfo,
+              paymentFiles
+            }}
+            onUpdateData={handleUpdateData}
+          />
+        );
+      case 'success':
+        return <SuccessPage />;
+      default:
+        return <LanguageSelector onContinue={() => setCurrentPage('intro')} />;
+    }
+  };
+
+  return renderPage();
+}
