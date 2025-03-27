@@ -4,6 +4,7 @@ import { ArrowLeft, Award, ChevronRight } from "lucide-react";
 import { uploadFirestorage } from "../../../utils/firebase";
 import MultiFileUploadComponent from "../../../components/MultipleFileUpload";
 import { updatePreApplicationSection } from "../../../http/requests/applicator";
+import { useAppSelector } from "../../../store/hooks";
 
 interface RecognitionUploadProps {
   onBack: () => void;
@@ -22,6 +23,7 @@ const RecognitionUpload: React.FC<RecognitionUploadProps> = ({
   const [fileUrls, setFileUrls] = useState<any>();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const applicatorData=useAppSelector((state)=>state.applicator.applicatorData);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,7 +51,7 @@ const RecognitionUpload: React.FC<RecognitionUploadProps> = ({
     try {
       // Example of how you might handle uploading multiple files
       const uploadPromises = files.map(async (file) => {
-        const fileUrl = await uploadFirestorage(file, folder, "53112313123");
+        const fileUrl = await uploadFirestorage(file, folder, applicatorData.application.id);
         return { file, url: fileUrl };
       });
 

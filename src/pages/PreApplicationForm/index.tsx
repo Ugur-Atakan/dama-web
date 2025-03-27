@@ -10,6 +10,7 @@ import PaymentUpload from "./components/PaymentUpload";
 import ApplicationSummary from "./components/ApplicationSummary";
 import SuccessPage from "./components/SuccessPage";
 import LanguageSelector from "../../components/LanguageSelector";
+import { useAppSelector } from "../../store/hooks";
 
 export default function PreApplicationForm() {
   const [currentPage, setCurrentPage] = useState<
@@ -37,7 +38,8 @@ export default function PreApplicationForm() {
     files: File[];
   }>({ hasDocuments: false, files: [] });
   const [paymentFiles, setPaymentFiles] = useState<File[]>([]);
-
+  const applicatorData=useAppSelector((state)=>state.applicator.applicatorData);
+  
   const handleSubmitApplication = () => {
     // Here you would typically send the data to your backend
     setCurrentPage("success");

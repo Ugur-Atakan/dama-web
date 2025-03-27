@@ -1,22 +1,38 @@
 import React, { useState } from 'react';
-import { Calendar, Clock, X } from 'lucide-react';
+import { Calendar, Clock, X, MessageSquare, Video, Users } from 'lucide-react';
+
+// Enum değerleri (Prisma modelinizle eşleşmeli)
+export enum AppointmentType {
+  ONLINE = 'ONLINE',
+  IN_PERSON = 'IN_PERSON',
+}
 
 interface AppointmentModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (date: Date) => void;
+  onSubmit: (appointmentData: {
+    dateTime: Date;
+    notes?: string;
+    appointmentType: AppointmentType;
+  }) => void;
 }
 
 export default function AppointmentModal({ isOpen, onClose, onSubmit }: AppointmentModalProps) {
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [selectedTime, setSelectedTime] = useState<string>('');
+  const [notes, setNotes] = useState<string>('');
+  const [appointmentType, setAppointmentType] = useState<AppointmentType>(AppointmentType.ONLINE);
 
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const dateTime = new Date(`${selectedDate}T${selectedTime}`);
-    onSubmit(dateTime);
+    onSubmit({
+      dateTime,
+      notes: notes.trim() || undefined, // Boş string ise undefined gönder
+      appointmentType,
+    });
   };
 
   // Generate time slots from 09:00 to 17:00
@@ -77,6 +93,57 @@ export default function AppointmentModal({ isOpen, onClose, onSubmit }: Appointm
                 </option>
               ))}
             </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              <div className="flex items-center gap-2">
+                <MessageSquare size={16} />
+                <span>Notlar (İsteğe bağlı)</span>
+              </div>
+            </label>
+            <textarea
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="Randevu ile ilgili notlar..."
+              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#292A2D] focus:border-transparent"
+              rows={3}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              <div className="flex items-center gap-2">
+                <Video size={16} />
+                <span>Randevu Türü</span>
+              </div>
+            </label>
+            <div className="flex gap-4 mt-2">
+              <label className="flex items-center space-x-2 cursor-pointer">
+                <input
+                  type="radio"
+                  checked={appointmentType === AppointmentType.ONLINE}
+                  onChange={() => setAppointmentType(AppointmentType.ONLINE)}
+                  className="form-radio text-[#292A2D] focus:ring-[#292A2D]"
+                />
+                <div className="flex items-center gap-1">
+                  <Video size={16} />
+                  <span>Online</span>
+                </div>
+              </label>
+              <label className="flex items-center space-x-2 cursor-pointer">
+                <input
+                  type="radio"
+                  checked={appointmentType === AppointmentType.IN_PERSON}
+                  onChange={() => setAppointmentType(AppointmentType.IN_PERSON)}
+                  className="form-radio text-[#292A2D] focus:ring-[#292A2D]"
+                />
+                <div className="flex items-center gap-1">
+                  <Users size={16} />
+                  <span>Yüz yüze</span>
+                </div>
+              </label>
+            </div>
           </div>
 
           <div className="flex justify-end gap-2 mt-6">

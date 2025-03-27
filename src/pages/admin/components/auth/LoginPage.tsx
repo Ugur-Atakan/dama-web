@@ -29,9 +29,7 @@ export default function AdminLoginPage() {
         JSON.parse(JSON.stringify(error, Object.getOwnPropertyNames(error)))
       );
 
-      if (error.message === "Bu hesap çalışan hesabı değil.") {
-        setError(error.message);
-      } else if (error.code === "auth/invalid-email") {
+      if (error.code === "auth/invalid-email") {
         setError("Geçersiz e-posta adresi.");
       } else if (error.code === "auth/wrong-password") {
         setError("Hatalı şifre.");

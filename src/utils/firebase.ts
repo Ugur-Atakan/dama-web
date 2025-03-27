@@ -1,20 +1,9 @@
-import { doc, setDoc } from 'firebase/firestore';
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { db } from '../config/firebase';
-
-export const saveFirestoreDb = async (data: any, userId: string) => {
-    try {
-      await setDoc(doc(db, 'applications', userId), {...data,applicantId:userId}, { merge: true });
-    } catch (error) {
-      console.error('Error saving data:', error);
-    }
-  };
-
-  export const uploadFirestorage = async (file: File, folder: string, userId: string): Promise<string | null> => {
-      const storage = getStorage();
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { fireStorage } from "../config/firebase";
+export const uploadFirestorage = async (file: File, folder: string, applicationId: string): Promise<string | null> => {
       const fileExtension = file.name.split(".").pop();
-      const fileName = `${folder}/${userId}/${Date.now()}.${fileExtension}`;
-      const storageRef = ref(storage, fileName);
+      const fileName = `${folder}/${applicationId}/${Date.now()}.${fileExtension}`;
+      const storageRef = ref(fireStorage, fileName);
       try {
         const snapshot = await uploadBytes(storageRef, file);
         return await getDownloadURL(snapshot.ref);

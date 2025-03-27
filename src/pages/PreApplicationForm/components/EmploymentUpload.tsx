@@ -4,6 +4,7 @@ import { ArrowLeft, AlertCircle, ChevronRight, Briefcase } from "lucide-react";
 import { uploadFirestorage } from "../../../utils/firebase";
 import MultiFileUploadComponent from "../../../components/MultipleFileUpload";
 import { updatePreApplicationSection } from "../../../http/requests/applicator";
+import { useAppSelector } from "../../../store/hooks";
 
 interface EmploymentUploadProps {
   onBack: () => void;
@@ -20,8 +21,11 @@ const EmploymentUpload: React.FC<EmploymentUploadProps> = ({
   const [files, setFiles] = useState<File[]>([]);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [fileUrls, setFileUrls] = useState<any>(); 
+  const [fileUrls, setFileUrls] = useState<any>();
   const [showTips, setShowTips] = useState(false);
+  const applicatorData = useAppSelector(
+    (state) => state.applicator.applicatorData
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,7 +35,6 @@ const EmploymentUpload: React.FC<EmploymentUploadProps> = ({
     }
   };
 
-
   const handleSaveStep4 = async () => {
     const data = {
       step: 4,
@@ -40,10 +43,8 @@ const EmploymentUpload: React.FC<EmploymentUploadProps> = ({
         employmentFiles: fileUrls,
       },
     };
-      await updatePreApplicationSection(data);
-    
+    await updatePreApplicationSection(data);
   };
-
 
   const handleSave = async (exitAfterSave: boolean = false) => {
     setSaving(true);
@@ -51,7 +52,11 @@ const EmploymentUpload: React.FC<EmploymentUploadProps> = ({
     try {
       // Example of how you might handle uploading multiple files
       const uploadPromises = files.map(async (file) => {
-        const fileUrl = await uploadFirestorage(file, folder, "53112313123");
+        const fileUrl = await uploadFirestorage(
+          file,
+          folder,
+          applicatorData.application.id
+        );
         return { file, url: fileUrl };
       });
 
@@ -111,18 +116,28 @@ const EmploymentUpload: React.FC<EmploymentUploadProps> = ({
           onClick={() => setShowTips(!showTips)}
           className="w-full mb-6 flex items-center justify-between p-4 bg-blue-50 rounded-xl text-blue-700 hover:bg-blue-100 transition-colors"
         >
-          <span className="font-medium">{t("employmentUpload.showExamples")}</span>
-          <span className="text-sm">{showTips ? t("common.hide") : t("common.show")}</span>
+          <span className="font-medium">
+            {t("employmentUpload.showExamples")}
+          </span>
+          <span className="text-sm">
+            {showTips ? t("common.hide") : t("common.show")}
+          </span>
         </button>
 
         {showTips && (
           <div className="mb-6 bg-blue-50 p-6 rounded-xl space-y-4">
-            <h3 className="font-medium text-blue-900">{t("employmentUpload.examples.title")}</h3>
+            <h3 className="font-medium text-blue-900">
+              {t("employmentUpload.examples.title")}
+            </h3>
             <ul className="list-disc list-inside space-y-3 text-sm text-blue-800">
               {/* @ts-ignore */}
-              {t("employmentUpload.examples.list", { returnObjects: true }).map((example, index) => (
-                <li key={index} className="pl-2">{example}</li>
-              ))}
+              {t("employmentUpload.examples.list", { returnObjects: true }).map(
+                (example, index) => (
+                  <li key={index} className="pl-2">
+                    {example}
+                  </li>
+                )
+              )}
             </ul>
           </div>
         )}

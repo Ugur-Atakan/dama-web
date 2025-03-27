@@ -4,6 +4,7 @@ import { ArrowLeft, AlertCircle, ChevronRight } from "lucide-react";
 import { uploadFirestorage } from "../../../utils/firebase";
 import MultiFileUploadComponent from "../../../components/MultipleFileUpload";
 import { updatePreApplicationSection } from "../../../http/requests/applicator";
+import { useAppSelector } from "../../../store/hooks";
 
 interface PassportUploadProps {
   onBack: () => void;
@@ -21,6 +22,8 @@ const PassportUpload: React.FC<PassportUploadProps> = ({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fileUrls, setFileUrls] = useState<any>(); 
+  
+    const applicatorData=useAppSelector((state)=>state.applicator.applicatorData);
   
 
 
@@ -53,7 +56,7 @@ const PassportUpload: React.FC<PassportUploadProps> = ({
     try {
       // Example of how you might handle uploading multiple files
       const uploadPromises = files.map(async (file) => {
-        const fileUrl = await uploadFirestorage(file, folder, "53112313123");
+        const fileUrl = await uploadFirestorage(file, folder, applicatorData.application.id);
         return { file, url: fileUrl };
       });
 

@@ -4,6 +4,7 @@ import { ArrowLeft, AlertCircle, ChevronRight, DollarSign, HelpCircle } from "lu
 import { uploadFirestorage } from "../../../utils/firebase";
 import MultiFileUploadComponent from "../../../components/MultipleFileUpload";
 import { updatePreApplicationSection } from "../../../http/requests/applicator";
+import { useAppSelector } from "../../../store/hooks";
 
 interface PaymentUploadProps {
   onBack: () => void;
@@ -22,6 +23,8 @@ const PaymentUpload: React.FC<PaymentUploadProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [showTips, setShowTips] = useState(false);
   const [fileUrls, setFileUrls] = useState<any>();
+    const applicatorData=useAppSelector((state)=>state.applicator.applicatorData);
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,7 +55,7 @@ const PaymentUpload: React.FC<PaymentUploadProps> = ({
     try {
       // Example of how you might handle uploading multiple files
       const uploadPromises = files.map(async (file) => {
-        const fileUrl = await uploadFirestorage(file, folder, "53112313123");
+        const fileUrl = await uploadFirestorage(file, folder, applicatorData.application.id);;
         return { file, url: fileUrl };
       });
 

@@ -24,10 +24,26 @@ export const verifyOTPToken = async (
   }
 };
 
+
 export const getApplicatorProfile = async (): Promise<IApplicator> => {
   const response = await instance.get("applicator/auth/profile");
   return response.data;
 };
+
+export class UpdateApplicatorData {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  birthDate?: Date;
+}
+
+export const updateApplicatorProfile = async (data:UpdateApplicatorData): Promise<IApplicator> => {
+  const response = await instance.patch("applicator/auth/update-profile",data);
+  return response.data;
+};
+
+
+
 
 
 export const updatePreApplicationSection = async (data: {
