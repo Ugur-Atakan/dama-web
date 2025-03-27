@@ -10,13 +10,14 @@
     "en": "English"
   },
   "intro": {
+    "start": "Start",
     "welcome": "Welcome to DAMA Advisors",
     "description": "We specialize in Defense Base Act (DBA) claims, providing expert legal support for workers facing workplace injuries or illnesses.",
     "expertise": "DBA Expertise",
     "expertiseDesc": "Our team has extensive experience in handling complex DBA cases, ensuring your rights are protected throughout the process.",
     "support": "Comprehensive Support",
     "supportDesc": "We guide you through every step of your claim, from initial filing to final resolution, with personalized attention to your case.",
-    "newApplication": "New Application",
+    "newApplication": "Start a Application",
     "login": "Login",
     "or": "or"
   },
@@ -37,6 +38,40 @@
       {
         "title": "Recognition Documents",
         "description": "If available, any recognition, appreciation, or achievement certificates from your workplace"
+      },
+      {
+        "title": "Payment Records",
+        "description": "Bank statements or payment records showing your salary payments"
+      }
+    ],
+    "continue": "I Have the Documents, Continue",
+    "note": "All documents will be stored securely and used only for your application."
+  },
+  "applicationRequirements": {
+    "back": "Go Back",
+    "title": "Application Requirements",
+    "description": "To complete your application, we'll need the following documents. Please ensure you have these ready before proceeding.",
+    "warning": "Your application may be delayed or cannot be completed if you're unable to upload the required documents.",
+    "documents": [
+      {
+        "title": "Passport and Travel Records",
+        "description": "Your passport and entry-exit records from the period you worked at the bases"
+      },
+      {
+        "title": "Employment Documents",
+        "description": "Documents showing your employment with the company and your position (employment contracts, assignment letters, etc.)"
+      },
+      {
+        "title": "Recognition Documents",
+        "description": "If available, any recognition, appreciation, or achievement certificates from your workplace"
+      },
+      {
+        "title": "Payment Records",
+        "description": "Bank statements or payment records showing your salary payments"
+      },
+      {
+        "title": "Payment Records",
+        "description": "Bank statements or payment records showing your salary payments"
       },
       {
         "title": "Payment Records",
@@ -196,6 +231,7 @@
     "note": "Please keep your phone available as we will contact you via WhatsApp for any additional information or updates regarding your application."
   },
   "common": {
+    "back": "Go Back",
     "show": "Show",
     "hide": "Hide",
     "save": "Save",

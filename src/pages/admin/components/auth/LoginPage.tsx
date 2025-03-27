@@ -6,7 +6,7 @@ import { loginWithEmail } from "../../../../http/requests/auth";
 import { saveUserTokens } from "../../../../utils/storage";
 import { login } from "../../../../store/slices/userSlice";
 
-export default function LoginPage() {
+export default function AdminLoginPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

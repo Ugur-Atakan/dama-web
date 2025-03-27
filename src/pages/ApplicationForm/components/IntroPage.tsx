@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { Scale, Shield } from 'lucide-react';
 
 interface IntroPageProps {
-  onNewApplication: () => void;
+  onComplete: () => void;
 }
 
-const IntroPage: React.FC<IntroPageProps> = ({ onNewApplication }) => {
+const IntroPage: React.FC<IntroPageProps> = ({ onComplete }) => {
   const { t } = useTranslation();
 
   return (
@@ -41,11 +41,11 @@ const IntroPage: React.FC<IntroPageProps> = ({ onNewApplication }) => {
 
         <div className="space-y-4">
           <button
-            onClick={onNewApplication}
+            onClick={onComplete}
             className="w-full bg-[#292A2D] text-white py-4 rounded-xl font-medium 
               hover:bg-opacity-90 transition-all duration-300 text-lg"
           >
-            {t('intro.newApplication')}
+            {t('intro.start')}
           </button>
         </div>
       </div>

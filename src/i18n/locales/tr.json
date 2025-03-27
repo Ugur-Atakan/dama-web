@@ -10,13 +10,14 @@
     "en": "İngilizce"
   },
   "intro": {
+    "start": "Başlat",
     "welcome": "DAMA Advisors'a Hoş Geldiniz",
     "description": "Defense Base Act (DBA) talepleri konusunda uzmanlaşmış, iş yerinde yaralanma veya hastalık yaşayan çalışanlara hukuki destek sağlıyoruz.",
     "expertise": "DBA Uzmanlığı",
     "expertiseDesc": "Ekibimiz, karmaşık DBA davalarında geniş deneyime sahip olup, süreç boyunca haklarınızın korunmasını sağlar.",
     "support": "Kapsamlı Destek",
     "supportDesc": "İlk başvurudan nihai karara kadar, davanıza özel ilgiyle tüm süreç boyunca size rehberlik ediyoruz.",
-    "newApplication": "Yeni Başvuru",
+    "newApplication": "Başvuruya Başla",
     "login": "Giriş Yap",
     "or": "veya"
   },
@@ -45,6 +46,40 @@
     ],
     "continue": "Belgeleri Hazırladım, Devam Et",
     "note": "Tüm belgeler güvenli bir şekilde saklanacak ve sadece başvurunuz için kullanılacaktır."
+  },
+  "applicationRequirements": {
+    "back": "Go Back",
+    "title": "Application Requirements",
+    "description": "To complete your application, we'll need the following documents. Please ensure you have these ready before proceeding.",
+    "warning": "Your application may be delayed or cannot be completed if you're unable to upload the required documents.",
+    "documents": [
+      {
+        "title": "Passport and Travel Records",
+        "description": "Your passport and entry-exit records from the period you worked at the bases"
+      },
+      {
+        "title": "Employment Documents",
+        "description": "Documents showing your employment with the company and your position (employment contracts, assignment letters, etc.)"
+      },
+      {
+        "title": "Recognition Documents",
+        "description": "If available, any recognition, appreciation, or achievement certificates from your workplace"
+      },
+      {
+        "title": "Payment Records",
+        "description": "Bank statements or payment records showing your salary payments"
+      },
+      {
+        "title": "Payment Records",
+        "description": "Bank statements or payment records showing your salary payments"
+      },
+      {
+        "title": "Payment Records",
+        "description": "Bank statements or payment records showing your salary payments"
+      }
+    ],
+    "continue": "I Have the Documents, Continue",
+    "note": "All documents will be stored securely and used only for your application."
   },
   "whatsapp": {
     "back": "Geri Dön",

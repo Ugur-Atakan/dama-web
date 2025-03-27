@@ -1,84 +1,119 @@
-import { useState} from 'react';
-import LanguageSelector from '../../components/LanguageSelector';
-import WhatsAppAuth from './components/WhatsAppAuth';
-import MaritalStatus from './components/MaritalStatus';
-import EmploymentInfo from './components/EmploymentInfo';
-import WorkConditions from './components/WorkConditions';
-import PostEmployment from './components/PostEmployment';
-import EvidenceWitness from './components/EvidenceWitness';
-import Summary from './components/Summary';
-import SubmissionComplete from './components/SubmissionComplete';
-
+import { useState } from "react";
+import MaritalStatus from "./components/MaritalStatus";
+import EmploymentInfo from "./components/EmploymentInfo";
+import WorkConditions from "./components/WorkConditions";
+import PostEmployment from "./components/PostEmployment";
+import EvidenceWitness from "./components/EvidenceWitness";
+import Summary from "./components/Summary";
+import SubmissionComplete from "./components/SubmissionComplete";
+import IntroPage from "./components/IntroPage";
+import RequirementsPage from "./components/RequirementsPage";
 
 export default function ApplicationForm() {
   const [currentStep, setCurrentStep] = useState<
-    | 'language'
-    | 'auth'
-    | 'marital'
-    | 'employment'
-    | 'workConditions'
-    | 'postEmployment'
-    | 'evidenceWitness'
-    | 'summary'
-    | 'complete'
-  >('language');
-    
+    | "intro"
+    | "requirements"
+    | "marital"
+    | "employment"
+    | "workConditions"
+    | "postEmployment"
+    | "evidenceWitness"
+    | "summary"
+    | "complete"
+  >("intro");
+
   const handleBack = () => {
     switch (currentStep) {
-      case 'auth':
-        setCurrentStep('language');
+      case "requirements":
+        setCurrentStep("intro");
         break;
-      case 'marital':
-        setCurrentStep('auth');
+      case "marital":
+        setCurrentStep("requirements");
         break;
-      case 'employment':
-        setCurrentStep('marital');
+      case "employment":
+        setCurrentStep("marital");
         break;
-      case 'workConditions':
-        setCurrentStep('employment');
+      case "workConditions":
+        setCurrentStep("employment");
         break;
-      case 'postEmployment':
-        setCurrentStep('workConditions');
+      case "postEmployment":
+        setCurrentStep("workConditions");
         break;
-      case 'evidenceWitness':
-        setCurrentStep('postEmployment');
+      case "evidenceWitness":
+        setCurrentStep("postEmployment");
         break;
-      case 'summary':
-        setCurrentStep('evidenceWitness');
+      case "summary":
+        setCurrentStep("evidenceWitness");
         break;
     }
   };
 
-  if (currentStep === 'language') {
-    return <LanguageSelector onContinue={() => setCurrentStep('auth')} />;
+  if (currentStep === "intro") {
+    return <IntroPage onComplete={() => setCurrentStep("requirements")} />;
   }
 
-  if (currentStep === 'auth') {
-    return <WhatsAppAuth onComplete={() => setCurrentStep('marital')} onBack={handleBack} />;
+  if (currentStep === "requirements") {
+    return (
+      <RequirementsPage
+        onContinue={() => setCurrentStep("marital")}
+        onBack={handleBack}
+      />
+    );
   }
 
-  if (currentStep === 'marital') {
-    return <MaritalStatus onComplete={() => setCurrentStep('employment')} onBack={handleBack} />;
+  if (currentStep === "marital") {
+    return (
+      <MaritalStatus
+        onComplete={() => setCurrentStep("employment")}
+        onBack={handleBack}
+      />
+    );
   }
 
-  if (currentStep === 'employment') {
-    return <EmploymentInfo onComplete={() => setCurrentStep('workConditions')} onBack={handleBack} />;
+  if (currentStep === "employment") {
+    return (
+      <EmploymentInfo
+        onComplete={() => setCurrentStep("workConditions")}
+        onBack={handleBack}
+      />
+    );
   }
 
-  if (currentStep === 'workConditions') {
-    return <WorkConditions onComplete={() => setCurrentStep('postEmployment')} onBack={handleBack} />;
+  if (currentStep === "workConditions") {
+    return (
+      <WorkConditions
+        onComplete={() => setCurrentStep("postEmployment")}
+        onBack={handleBack}
+      />
+    );
   }
 
-  if (currentStep === 'postEmployment') {
-    return <PostEmployment onComplete={() => setCurrentStep('evidenceWitness')} onBack={handleBack} />;
+  if (currentStep === "postEmployment") {
+    return (
+      <PostEmployment
+        onComplete={() => setCurrentStep("evidenceWitness")}
+        onBack={handleBack}
+      />
+    );
   }
 
-  if (currentStep === 'evidenceWitness') {
-    return <EvidenceWitness onComplete={() => setCurrentStep('summary')} onBack={handleBack} />;
+  if (currentStep === "evidenceWitness") {
+    return (
+      <EvidenceWitness
+        onComplete={() => setCurrentStep("summary")}
+        onBack={handleBack}
+      />
+    );
   }
 
-  if (currentStep === 'summary') {
-    return <Summary onComplete={() => setCurrentStep('complete')} onEdit={(step) => setCurrentStep(step)} onBack={handleBack} />;
+  if (currentStep === "summary") {
+    return (
+      <Summary
+        onComplete={() => setCurrentStep("complete")}
+        onEdit={(step) => setCurrentStep(step as any)}
+        onBack={handleBack}
+      />
+    );
   }
 
   return <SubmissionComplete />;

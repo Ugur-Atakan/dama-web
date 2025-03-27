@@ -55,14 +55,6 @@ const registerWithEmail=async(data:{email:string,password:string,firstName:strin
   }
 }
 
-const isUserExist=async(email:string):Promise<boolean>=>{
-  try {
-    const response = await baseApi.post('/auth/check-email', { email });
-    return response.data.exists;
-  } catch (error: any) {
-    throw error;
-  }
-}
 
 export {
   forgotPassword,
@@ -71,5 +63,4 @@ export {
   resetPassword,
   loginWithEmail,
   registerWithEmail,
-  isUserExist
 };

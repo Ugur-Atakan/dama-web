@@ -4,11 +4,11 @@ import { logOut } from '../store/slices/userSlice';
 import { store } from '../store/store';
 import { API_BASE_URL } from './constants';
 import { logOutApplicator } from '../store/slices/applicatorSlice';
-const instance = axios.create({
+const adminInstance = axios.create({
   baseURL: API_BASE_URL,
 });
 
-instance.interceptors.request.use(
+adminInstance.interceptors.request.use(
   async config => {
     const tokens = getUserTokens();
     if (tokens) {
@@ -21,7 +21,7 @@ instance.interceptors.request.use(
   },
 );
 
-instance.interceptors.response.use(
+adminInstance.interceptors.response.use(
   response => {
     return response;
   },
@@ -42,22 +42,22 @@ instance.interceptors.response.use(
       }
 
       try {
-        const res = await instance.post('applicator/auth/refresh-token', {
+        const res = await adminInstance.post('/auth/refresh-token', {
           refreshToken: tokens.refreshToken,
         });
 
         if (res.status === 200) {
           const {accessToken, refreshToken} = res.data;
 
-          instance.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+          adminInstance.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
           originalRequest.headers.Authorization = `Bearer ${refreshToken}`;
 
           saveUserTokens({accessToken, refreshToken});
-          return instance(originalRequest);
+          return adminInstance(originalRequest);
         }
       } catch (refreshError) {
         removeTokens();
-        store.dispatch(logOutApplicator());
+        store.dispatch(logOut());
         return Promise.reject(refreshError);
       }
     }
@@ -66,4 +66,4 @@ instance.interceptors.response.use(
   },
 );
 
-export default instance;
+export default adminInstance;

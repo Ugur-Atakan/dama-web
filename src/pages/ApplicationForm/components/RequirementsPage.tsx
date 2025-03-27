@@ -49,7 +49,7 @@ const RequirementsPage: React.FC<RequirementsPageProps> = ({ onBack, onContinue 
 
         <div className="space-y-4 mb-8">
           {/*@ts-ignore */}
-          {t('requirements.documents', { returnObjects: true }).map((doc, index) => (
+          {t('applicationRequirements.documents', { returnObjects: true }).map((doc, index) => (
             <div key={index} className="flex items-start gap-4 p-4 bg-gray-50 rounded-xl border-2 border-[#292A2D] border-opacity-10">
               <div className="flex-shrink-0 w-8 h-8 bg-[#292A2D] bg-opacity-10 rounded-full flex items-center justify-center">
                 <span className="text-sm font-medium text-[#292A2D]">{index + 1}</span>
@@ -61,6 +61,8 @@ const RequirementsPage: React.FC<RequirementsPageProps> = ({ onBack, onContinue 
             </div>
           ))}
         </div>
+
+        
 
         <div className="space-y-4">
           <button
