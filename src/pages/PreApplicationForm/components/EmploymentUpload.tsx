@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { ArrowLeft, AlertCircle, ChevronRight, Briefcase } from "lucide-react";
 import { uploadFirestorage } from "../../../utils/firebase";
 import MultiFileUploadComponent from "../../../components/MultipleFileUpload";
+import { updatePreApplicationSection } from "../../../http/requests/applicator";
 
 interface EmploymentUploadProps {
   onBack: () => void;
@@ -31,7 +32,7 @@ const EmploymentUpload: React.FC<EmploymentUploadProps> = ({
   };
 
 
-  const handleSaveStep4 = () => {
+  const handleSaveStep4 = async () => {
     const data = {
       step: 4,
       section: "employment",
@@ -39,6 +40,8 @@ const EmploymentUpload: React.FC<EmploymentUploadProps> = ({
         employmentFiles: fileUrls,
       },
     };
+      await updatePreApplicationSection(data);
+    
   };
 
 
@@ -54,12 +57,7 @@ const EmploymentUpload: React.FC<EmploymentUploadProps> = ({
 
       const uploadResults = await Promise.all(uploadPromises);
       setFileUrls(uploadResults);
-      const uploadData = {
-        employment: { files: uploadResults },
-        updatedAt: new Date().toISOString(),
-        step: 4,
-      };
-
+      await handleSaveStep4();
       if (exitAfterSave) {
         onContinue(files);
       }

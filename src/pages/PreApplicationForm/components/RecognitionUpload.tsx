@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { ArrowLeft, Award, ChevronRight } from "lucide-react";
 import { uploadFirestorage } from "../../../utils/firebase";
 import MultiFileUploadComponent from "../../../components/MultipleFileUpload";
+import { updatePreApplicationSection } from "../../../http/requests/applicator";
 
 interface RecognitionUploadProps {
   onBack: () => void;
@@ -30,18 +31,17 @@ const RecognitionUpload: React.FC<RecognitionUploadProps> = ({
     }
   };
 
-
-const handleSaveStep5 = () => {
-  const data = {
-    step: 5,
-    section: "recognition",
-    data: {
-      files: fileUrls,
-      hasDocuments,
-    },
+  const handleSaveStep5 = async () => {
+    const data = {
+      step: 5,
+      section: "recognition",
+      data: {
+        files: fileUrls,
+        hasDocuments,
+      },
+    };
+    await updatePreApplicationSection(data);
   };
-};
-
 
   const handleSave = async (exitAfterSave: boolean = false) => {
     setSaving(true);
@@ -55,13 +55,7 @@ const handleSaveStep5 = () => {
 
       const uploadResults = await Promise.all(uploadPromises);
       setFileUrls(uploadResults);
-
-      const uploadData = {
-        recognition: { files: uploadResults },
-        updatedAt: new Date().toISOString(),
-        step: 6,
-      };
-
+      await handleSaveStep5();
       if (exitAfterSave) {
         onContinue(true, files);
       }
@@ -106,10 +100,14 @@ const handleSaveStep5 = () => {
                 text-left transition-all duration-300 group"
             >
               <div className="flex items-center justify-between">
-                <span className="text-lg font-medium">{t("recognitionUpload.hasDocuments")}</span>
+                <span className="text-lg font-medium">
+                  {t("recognitionUpload.hasDocuments")}
+                </span>
                 <ChevronRight className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" />
               </div>
-              <p className="text-sm opacity-80 mt-1">{t("recognitionUpload.hasDocumentsDesc")}</p>
+              <p className="text-sm opacity-80 mt-1">
+                {t("recognitionUpload.hasDocumentsDesc")}
+              </p>
             </button>
 
             <button
@@ -118,10 +116,14 @@ const handleSaveStep5 = () => {
                 text-left transition-all duration-300 group"
             >
               <div className="flex items-center justify-between">
-                <span className="text-lg font-medium">{t("recognitionUpload.noDocuments")}</span>
+                <span className="text-lg font-medium">
+                  {t("recognitionUpload.noDocuments")}
+                </span>
                 <ChevronRight className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" />
               </div>
-              <p className="text-sm text-gray-500 mt-1">{t("recognitionUpload.noDocumentsDesc")}</p>
+              <p className="text-sm text-gray-500 mt-1">
+                {t("recognitionUpload.noDocumentsDesc")}
+              </p>
             </button>
           </div>
         </div>

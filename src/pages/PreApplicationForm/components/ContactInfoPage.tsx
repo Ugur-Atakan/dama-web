@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft, UserCircle, ChevronRight } from 'lucide-react';
+import { updatePreApplicationSection } from '../../../http/requests/applicator';
 
 interface ContactInfoPageProps {
   onBack: () => void;
@@ -17,6 +18,7 @@ const ContactInfoPage: React.FC<ContactInfoPageProps> = ({ onBack, onContinue })
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (firstName.trim() && lastName.trim() && birthDate) {
+      handleSaveStep1();
       onContinue({
         firstName: firstName.trim(),
         lastName: lastName.trim(),
@@ -26,7 +28,7 @@ const ContactInfoPage: React.FC<ContactInfoPageProps> = ({ onBack, onContinue })
     }
   };
 
-  const handleSaveStep1 = () => {
+  const handleSaveStep1 = async () => {
     const data = {
       step:1,
       section:"contact",
@@ -37,6 +39,8 @@ const ContactInfoPage: React.FC<ContactInfoPageProps> = ({ onBack, onContinue })
         birthDate
       }
     }
+  await updatePreApplicationSection(data);
+    
   };
 
 

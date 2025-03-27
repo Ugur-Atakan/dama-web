@@ -1,4 +1,3 @@
-// AppRoutes.jsx
 import { Routes, Route, Navigate } from "react-router-dom";
 import AdminLayout from "../layouts/AdminLayout";
 import ProtectedRoute from "./ProtectedRoute";
@@ -16,10 +15,9 @@ import Login from "../pages/Login";
 export default function AppRoutes() {
   return (
     <Routes>
-      {/* Public route */}
-      <Route path="/admin/login" element={<AdminLoginPage />} />
+      {/* Public routes */}
       <Route path="/" element={<Login />} />
-      
+      <Route path="/admin/login" element={<AdminLoginPage />} />
       {/* Admin routes */}
       <Route path="/admin" element={
         <ProtectedRoute>
@@ -34,7 +32,7 @@ export default function AppRoutes() {
         <Route path="notifications" element={<NotificationsPage/>} />
       </Route>
       
-      {/* User routes */}
+      {/* Form routes */}
       <Route path="/forms/pre-application" element={
         <ProtectedRoute>
           <PreApplicationForm />
@@ -47,7 +45,6 @@ export default function AppRoutes() {
       } />
       
       {/* Redirects */}
-      <Route path="/" element={<Navigate to="/forms/pre-application" replace />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { ArrowLeft, AlertCircle, ChevronRight } from "lucide-react";
 import { uploadFirestorage } from "../../../utils/firebase";
 import MultiFileUploadComponent from "../../../components/MultipleFileUpload";
+import { updatePreApplicationSection } from "../../../http/requests/applicator";
 
 interface PassportUploadProps {
   onBack: () => void;
@@ -24,7 +25,7 @@ const PassportUpload: React.FC<PassportUploadProps> = ({
 
 
 
-  const handleSaveStep3 = () => {
+  const handleSaveStep3 = async() => {
     const data = {
       step: 3,
       section: "passport",
@@ -32,6 +33,8 @@ const PassportUpload: React.FC<PassportUploadProps> = ({
         employmentFiles: fileUrls,
       },
     };
+
+    await updatePreApplicationSection(data);
   };
 
 
@@ -57,12 +60,7 @@ const PassportUpload: React.FC<PassportUploadProps> = ({
       const uploadResults = await Promise.all(uploadPromises);
       setFileUrls(uploadResults);
 
-      const uploadData = {
-        passport: { files: uploadResults },
-        updatedAt: new Date().toISOString(),
-        step: 3,
-      };
-
+      await handleSaveStep3();
       if (exitAfterSave) {
         onContinue(files);
       }

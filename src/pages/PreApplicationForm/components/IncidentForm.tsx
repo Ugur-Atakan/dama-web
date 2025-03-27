@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ArrowLeft, HelpCircle, ChevronRight } from "lucide-react";
+import { updatePreApplicationSection } from "../../../http/requests/applicator";
 
 interface IncidentFormProps {
   onBack: () => void;
@@ -15,11 +16,12 @@ const IncidentForm: React.FC<IncidentFormProps> = ({ onBack, onContinue }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (description.trim().length >= 100) {
+      handleSaveStep2();
       onContinue(description);
     }
   };
 
-  const handleSaveStep2 = () => {
+  const handleSaveStep2 = async() => {
     const data = {
       step: 2,
       section: "incident",
@@ -27,6 +29,8 @@ const IncidentForm: React.FC<IncidentFormProps> = ({ onBack, onContinue }) => {
         incidentDescription: description,
       },
     };
+    await updatePreApplicationSection(data);
+    
   };
 
   return (

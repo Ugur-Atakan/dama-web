@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { ArrowLeft, AlertCircle, ChevronRight, DollarSign, HelpCircle } from "lucide-react";
 import { uploadFirestorage } from "../../../utils/firebase";
 import MultiFileUploadComponent from "../../../components/MultipleFileUpload";
+import { updatePreApplicationSection } from "../../../http/requests/applicator";
 
 interface PaymentUploadProps {
   onBack: () => void;
@@ -32,7 +33,7 @@ const PaymentUpload: React.FC<PaymentUploadProps> = ({
 
   
   
-  const handleSaveStep6 = () => {
+  const handleSaveStep6 =async () => {
     const data = {
       step: 6,
       section: "payment",
@@ -40,6 +41,8 @@ const PaymentUpload: React.FC<PaymentUploadProps> = ({
         paymentFiles: fileUrls,
       },
     };
+      await updatePreApplicationSection(data);
+    
   };
 
 
@@ -57,12 +60,7 @@ const PaymentUpload: React.FC<PaymentUploadProps> = ({
 
       setFileUrls(uploadResults);
 
-      const uploadData = {
-        payment: { files: uploadResults },
-        updatedAt: new Date().toISOString(),
-        step: 7,
-      };
-
+     await handleSaveStep6();
       if (exitAfterSave) {
         onContinue(files);
       }
