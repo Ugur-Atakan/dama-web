@@ -11,6 +11,7 @@ import PreApplicationForm from "../pages/PreApplicationForm";
 import ApplicationForm from "../pages/ApplicationForm";
 import NotificationsPage from "../pages/admin/components/notifications";
 import Login from "../pages/Login";
+import FormProtectRoute from "./FormProtectRoute";
 
 export default function AppRoutes() {
   return (
@@ -34,14 +35,14 @@ export default function AppRoutes() {
       
       {/* Form routes */}
       <Route path="/forms/pre-application" element={
-        <ProtectedRoute>
+        <FormProtectRoute>
           <PreApplicationForm />
-        </ProtectedRoute>
+        </FormProtectRoute>
       } />
       <Route path="/forms/application-form" element={
-        <ProtectedRoute>
+        <FormProtectRoute>
           <ApplicationForm />
-        </ProtectedRoute>
+        </FormProtectRoute>
       } />
       
       {/* Redirects */}

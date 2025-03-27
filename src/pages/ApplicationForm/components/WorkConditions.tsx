@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronLeft, Clock, Upload } from 'lucide-react';
+import { updateApplicationSection } from '../../../http/requests/applicator';
 
 interface WorkConditionsInfo {
   dailyHours: string;
@@ -68,16 +69,18 @@ const WorkConditions: React.FC<WorkConditionsProps> = ({ onComplete,onBack }) =>
   };
 
 
-  const handleSaveStep3 = () => {
+  const handleSaveStep3 = async() => {
     const data = {
       step: 3,
       section: "workConditions",
       data: formData,
     };
+     await updateApplicationSection(data);
   };
 
   const handleContinue = () => {
     if (isFormValid()) {
+      handleSaveStep3();
       onComplete();
     }
   };

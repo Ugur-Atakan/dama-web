@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronLeft, Users, Plus, X } from 'lucide-react';
+import { updateApplicationSection } from '../../../http/requests/applicator';
 
 interface Child {
   id: string;
@@ -53,12 +54,13 @@ const MaritalStatus: React.FC<MaritalStatusProps> = ({
         hasChildren === false ||
         (hasChildren === true && children.length > 0)
       ) {
+        handleSaveStep1();
         onComplete();
       }
     }
   };
 
-  const handleSaveStep1 = () => {
+  const handleSaveStep1 = async () => {
     const data = {
       step: 1,
       section: "marital",
@@ -69,6 +71,7 @@ const MaritalStatus: React.FC<MaritalStatusProps> = ({
         maritalStatus: maritalStatus,
       },
     };
+    await updateApplicationSection(data);
   };
   
 

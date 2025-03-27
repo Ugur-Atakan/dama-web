@@ -21,7 +21,7 @@ const IncidentForm: React.FC<IncidentFormProps> = ({ onBack, onContinue }) => {
     }
   };
 
-  const handleSaveStep2 = async() => {
+  const handleSaveStep2 = async () => {
     const data = {
       step: 2,
       section: "incident",
@@ -30,7 +30,6 @@ const IncidentForm: React.FC<IncidentFormProps> = ({ onBack, onContinue }) => {
       },
     };
     await updatePreApplicationSection(data);
-    
   };
 
   return (
@@ -76,8 +75,9 @@ const IncidentForm: React.FC<IncidentFormProps> = ({ onBack, onContinue }) => {
                   {t("incidentForm.tipsTitle")}
                 </h3>
                 <ul className="list-disc list-inside space-y-2 text-sm text-blue-700">
+                  {/*@ts-ignore */}
                   {t("incidentForm.tips", { returnObjects: true }).map(
-                    (tip, index) => (
+                    (tip:string, index:number) => (
                       <li key={index}>{tip}</li>
                     )
                   )}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronLeft, FileText, Plus, X, Link as LinkIcon } from 'lucide-react';
+import { updateApplicationSection } from '../../../http/requests/applicator';
 
 interface Witness {
   id: string;
@@ -102,18 +103,20 @@ const EvidenceWitness: React.FC<EvidenceWitnessProps> = ({ onComplete, onBack })
   };
 
 
-  const handleSaveStep5 = () => {
+  const handleSaveStep5 = async() => {
     const data = {
       step: 5,
       section: "evidenceWitness",
       data: formData,
     };
+     await updateApplicationSection(data);
   };
   
 
 
   const handleContinue = () => {
     if (isFormValid()) {
+      handleSaveStep5();
       onComplete();
     }
   };

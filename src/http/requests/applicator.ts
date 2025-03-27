@@ -37,10 +37,7 @@ export const updatePreApplicationSection = async (data: {
 }): Promise<IApplicatorResponse> => {
   try {
     const response = await instance.put(
-      "applications/update-section/pre-application",
-      {
-        data,
-      }
+      "applications/update-section/pre-application",data
     );
     return response.data;
   } catch (error: any) {
@@ -57,9 +54,7 @@ export const updateApplicationSection = async (data: {
   try {
     const response = await instance.put(
       "applications/update-section/application",
-      {
-        data,
-      }
+      data
     );
     return response.data;
   } catch (error: any) {

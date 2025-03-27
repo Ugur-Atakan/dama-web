@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ChevronLeft, Briefcase, Plus, X } from 'lucide-react';
+import { updateApplicationSection } from '../../../http/requests/applicator';
 
 interface PreviousJob {
   id: string;
@@ -83,16 +84,18 @@ const PostEmployment: React.FC<PostEmploymentProps> = ({ onComplete, onBack }) =
   };
 
 
-  const handleSaveStep4 = () => {
+  const handleSaveStep4 = async() => {
     const data = {
       step: 4,
       section: "postEmployment",
       data: formData,
     }
+     await updateApplicationSection(data);
   };
   
   const handleContinue = () => {
     if (isFormValid()) {
+      handleSaveStep4();
       onComplete();
     }
   };
