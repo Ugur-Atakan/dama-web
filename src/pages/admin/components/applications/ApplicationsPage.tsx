@@ -18,7 +18,7 @@ export default function ApplicationsPage() {
 
   const fetchApplications = async () => {
     try {
-      const response = await fetch('https://apidama.betterdemo.com.tr/api/applicators/all');
+      const response = await fetch('https://apidama.betterdemo.com.tr/api/admin/applicators');
       if (!response.ok) {
         throw new Error('Başvurular yüklenirken bir hata oluştu');
       }

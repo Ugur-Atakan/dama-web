@@ -22,7 +22,7 @@ export default function AdminLoginPage() {
       const { tokens, user } = loginData;
       saveUserTokens(tokens);
       dispatch(login({ user, tokens }));
-      navigate("admin/", { replace: true });
+      navigate("/admin/applications", { replace: true });
     } catch (error: any) {
       console.error(
         "Login error:",

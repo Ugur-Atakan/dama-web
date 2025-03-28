@@ -15,7 +15,7 @@ export default function ClientsPage() {
 
   const fetchClients = async () => {
     try {
-      const response = await fetch('https://apidama.betterdemo.com.tr/api/applicators/clients');
+      const response = await fetch('https://apidama.betterdemo.com.tr/api/admin/clients');
       if (!response.ok) {
         throw new Error('Müvekkiller yüklenirken bir hata oluştu');
       }

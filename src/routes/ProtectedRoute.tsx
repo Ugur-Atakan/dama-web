@@ -28,7 +28,7 @@ export default function ProtectedRoute({
     console.log("Getting user data");
     try {
       setLoading(true);
-      const response = await instance.get("/users/me");
+      const response = await instance.post("/user/me");
       console.log("User data:", response.data);
       dispatch(setUserData(response.data));
       setLoading(false);
