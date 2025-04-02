@@ -1,20 +1,19 @@
 export interface DashboardStats {
-  activeApplications: number;
+  totalApplicators: number;
   totalClients: number;
+  totalApplications: number;
   totalAppointments: number;
+  totalUsers: number;
+  recentUsers: any[];
+  comingAppointments: UpcomingAppointment[];
+  recentApplications: any[];
+
 }
 
-export interface RecentApplication {
-  id: string;
-  clientName: string;
-  date: string;
-  status: string;
-}
 
 export interface UpcomingAppointment {
   id: string;
   clientName: string;
-  date: string;
-  time: string;
+  dateTime: Date;
   notes?: string;
 }

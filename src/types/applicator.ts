@@ -35,3 +35,10 @@ export interface IApplicator {
     tokens: Tokens;
   }
   
+
+  export interface IAppointmentProps{
+    applicatorId: string;
+    dateTime: Date;
+    notes?: string;
+    appointmentType: 'ONLINE' | 'INOFFICE';
+  }

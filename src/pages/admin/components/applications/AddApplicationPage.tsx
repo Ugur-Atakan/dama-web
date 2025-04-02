@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Upload, Plus, Trash2, Info } from 'lucide-react';
+import { ArrowLeft, Upload, Trash2, Info } from 'lucide-react';
 
 interface AddApplicationPageProps {
   onBack: () => void;

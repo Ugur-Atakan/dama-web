@@ -6,6 +6,7 @@ import { logOut, setUserData } from "../store/slices/userSlice";
 import instance from "../http/instance";
 import { getUserTokens, removeTokens } from "../utils/storage";
 import AccessDenied from "../pages/AccessDenied";
+import adminInstance from "../http/adminInstance";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -28,7 +29,7 @@ export default function ProtectedRoute({
     console.log("Getting user data");
     try {
       setLoading(true);
-      const response = await instance.post("/user/me");
+      const response = await adminInstance.post("/user/me");
       console.log("User data:", response.data);
       dispatch(setUserData(response.data));
       setLoading(false);

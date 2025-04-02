@@ -1,5 +1,5 @@
 export interface Application {
-  id: string;
+  applicatorId: string;
   telephone: string;
   firstName: string;
   lastName: string;

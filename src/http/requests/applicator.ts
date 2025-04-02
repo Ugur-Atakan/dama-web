@@ -61,7 +61,6 @@ export const updatePreApplicationSection = async (data: {
   }
 };
 
-
 export const updateApplicationSection = async (data: {
   section: string;
   step: number;

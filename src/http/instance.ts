@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { getUserTokens, saveUserTokens,removeTokens } from '../utils/storage';
-import { logOut } from '../store/slices/userSlice';
 import { store } from '../store/store';
 import { API_BASE_URL } from './constants';
 import { logOutApplicator } from '../store/slices/applicatorSlice';

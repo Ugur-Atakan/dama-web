@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Users, FileText, Calendar, ArrowRight, Clock } from 'lucide-react';
-import { DashboardStats, RecentApplication, UpcomingAppointment } from '../../types/dashboard';
-import { mockStats, mockRecentApplications, mockUpcomingAppointments } from '../../data/mockDashboardData';
+import { DashboardStats, UpcomingAppointment } from '../../types/dashboard';
 import { statusClasses, statusLabels } from '../../types/application';
+import { getSystemStats } from '../../../../http/requests/admin';
+import { useNavigate } from 'react-router-dom';
 
 export default function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [recentApplications, setRecentApplications] = useState<RecentApplication[]>([]);
+  const [recentApplications, setRecentApplications] = useState<any[]>([]);
   const [upcomingAppointments, setUpcomingAppointments] = useState<UpcomingAppointment[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const navigate=useNavigate();
 
   useEffect(() => {
     fetchDashboardData();
@@ -16,10 +19,10 @@ export default function DashboardPage() {
 
   const fetchDashboardData = async () => {
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setStats(mockStats);
-      setRecentApplications(mockRecentApplications);
-      setUpcomingAppointments(mockUpcomingAppointments);
+    const stats= await getSystemStats();
+      setStats(stats);
+      setRecentApplications(stats.recentApplications);
+      setUpcomingAppointments(stats.comingAppointments);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     } finally {
@@ -48,7 +51,7 @@ export default function DashboardPage() {
             <div className="bg-white/10 rounded-lg p-4 backdrop-blur-lg">
               <FileText className="w-6 h-6 mb-2" />
               <p className="text-sm text-gray-200">Aktif Başvuru</p>
-              <p className="text-2xl font-bold">{stats?.activeApplications || 0}</p>
+              <p className="text-2xl font-bold">{stats?.totalApplicators || 0}</p>
             </div>
             <div className="bg-white/10 rounded-lg p-4 backdrop-blur-lg">
               <Users className="w-6 h-6 mb-2" />
@@ -74,7 +77,7 @@ export default function DashboardPage() {
                 <h2 className="text-lg font-medium text-gray-900">Son Başvurular</h2>
                 <p className="text-sm text-gray-500">Son 7 günün başvuruları</p>
               </div>
-              <button className="text-sm text-[#292A2D] hover:text-[#292A2D]/80 flex items-center">
+              <button className="text-sm text-[#292A2D] hover:text-[#292A2D]/80 flex items-center" onClick={() => navigate('/admin/applications')}>
                 Tümünü Gör
                 <ArrowRight className="w-4 h-4 ml-1" />
               </button>
@@ -85,14 +88,14 @@ export default function DashboardPage() {
               {recentApplications.map((application) => (
                 <div key={application.id} className="flex items-center justify-between bg-gray-50 p-4 rounded-lg">
                   <div>
-                    <p className="text-sm font-medium text-gray-900">{application.clientName}</p>
+                    <p className="text-sm font-medium text-gray-900">{`${application.applicator.firstName} ${application.applicator.lastName}`}</p>
                     <div className="flex items-center text-sm text-gray-500 mt-1">
                       <Calendar className="w-4 h-4 mr-1" />
-                      {new Date(application.date).toLocaleDateString('tr-TR')}
+                      {new Date(application.createdAt).toLocaleDateString('tr-TR')}
                     </div>
                   </div>
                   <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClasses[application.status]}`}>
-                    {statusLabels[application.status]}
+                    {statusLabels[application.applicator.status]}
                   </span>
                 </div>
               ))}
@@ -108,7 +111,7 @@ export default function DashboardPage() {
                 <h2 className="text-lg font-medium text-gray-900">Yaklaşan Randevular</h2>
                 <p className="text-sm text-gray-500">Bugün ve sonraki randevular</p>
               </div>
-              <button className="text-sm text-[#292A2D] hover:text-[#292A2D]/80 flex items-center">
+              <button className="text-sm text-[#292A2D] hover:text-[#292A2D]/80 flex items-center" onClick={() => navigate('/admin/appointments')}>
                 Tümünü Gör
                 <ArrowRight className="w-4 h-4 ml-1" />
               </button>
@@ -122,12 +125,12 @@ export default function DashboardPage() {
                     <p className="text-sm font-medium text-gray-900">{appointment.clientName}</p>
                     <div className="flex items-center text-sm font-medium text-[#292A2D]">
                       <Clock className="w-4 h-4 mr-1" />
-                      {appointment.time}
+                      {new Date(appointment.dateTime).toLocaleTimeString('tr-TR').slice(0, 5)}
                     </div>
                   </div>
                   <div className="flex items-center text-sm text-gray-500">
                     <Calendar className="w-4 h-4 mr-1" />
-                    {new Date(appointment.date).toLocaleDateString('tr-TR')}
+                    {new Date(appointment.dateTime).toLocaleDateString('tr-TR')}
                   </div>
                   {appointment.notes && (
                     <p className="text-sm text-gray-500 mt-2 bg-white p-2 rounded">

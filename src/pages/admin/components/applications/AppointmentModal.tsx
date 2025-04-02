@@ -1,38 +1,51 @@
 import React, { useState } from 'react';
 import { Calendar, Clock, X, MessageSquare, Video, Users } from 'lucide-react';
+import { createAppointment } from '../../../../http/requests/admin';
+import toast from 'react-hot-toast';
 
 // Enum değerleri (Prisma modelinizle eşleşmeli)
 export enum AppointmentType {
   ONLINE = 'ONLINE',
-  IN_PERSON = 'IN_PERSON',
+  IN_PERSON = 'INOFFICE',
 }
 
 interface AppointmentModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (appointmentData: {
-    dateTime: Date;
-    notes?: string;
-    appointmentType: AppointmentType;
-  }) => void;
+  onSubmit: (param:any) => void;
+  applicatorId: string;
 }
 
-export default function AppointmentModal({ isOpen, onClose, onSubmit }: AppointmentModalProps) {
+export default function AppointmentModal({ isOpen, onClose, onSubmit,applicatorId }: AppointmentModalProps) {
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [selectedTime, setSelectedTime] = useState<string>('');
   const [notes, setNotes] = useState<string>('');
   const [appointmentType, setAppointmentType] = useState<AppointmentType>(AppointmentType.ONLINE);
 
+  if(!applicatorId){
+    toast.error('Başvuru sahibi bulunamadı');
+    return null;
+  }
+  // Modal açık değilse hiçbir şey render etme
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const dateTime = new Date(`${selectedDate}T${selectedTime}`);
-    onSubmit({
+    const appointmentData= {
+      applicatorId,
       dateTime,
-      notes: notes.trim() || undefined, // Boş string ise undefined gönder
+      notes,
       appointmentType,
-    });
+    };
+    // Call the onSubmit function with the appointment data
+    try {
+      await createAppointment(appointmentData);
+    } catch (error) {
+      console.error('Error creating appointment:', error);
+      toast.error('Randevu oluşturulurken bir hata oluştu');
+    }
+    onSubmit(dateTime);
   };
 
   // Generate time slots from 09:00 to 17:00

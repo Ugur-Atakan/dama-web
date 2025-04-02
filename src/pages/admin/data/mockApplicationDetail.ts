@@ -2,7 +2,7 @@ import type { ApplicationDetail } from '../types/applicationDetail';
 
 export const mockApplicationDetail: ApplicationDetail = {
   id: "34437de4-48d2-4113-a072-95fb35a9f697",
-  applicationNumber: "APP-10560266",
+  pplicationNumber: "APP-10560266",
   preApplicationData: [
     {
       data: {

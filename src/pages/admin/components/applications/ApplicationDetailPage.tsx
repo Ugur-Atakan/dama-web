@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowLeft, FileText, Download, Calendar, UserPlus } from 'lucide-react';
 import type { ApplicationDetail } from '../../types/applicationDetail';
 import { sectionLabels } from '../../types/applicationDetail';
-import { mockApplicationDetail } from '../../data/mockApplicationDetail';
 import AppointmentModal from './AppointmentModal';
 import ConfirmationModal from './ConfirmationModal';
+import { getApplication, setAsClient } from '../../../../http/requests/admin';
 
 interface ApplicationDetailPageProps {
   id: string;
@@ -25,13 +25,12 @@ export default function ApplicationDetailPage({ id, onBack }: ApplicationDetailP
   const fetchApplicationDetail = async () => {
     try {
       setLoading(true);
-      setError(null);
-      
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Use mock data instead of API call
-      setApplication(mockApplicationDetail);
+      setError(null);    
+
+      const res= await getApplication(id);
+
+      console.log('Fetched application detail:', res); // Debug log
+      setApplication(res);
     } catch (err) {
       console.error('Error in fetchApplicationDetail:', err);
       setError('Başvuru detayları yüklenirken bir hata oluştu');
@@ -42,17 +41,15 @@ export default function ApplicationDetailPage({ id, onBack }: ApplicationDetailP
 
   const handleAppointmentSubmit = async (date: Date) => {
     try {
-      // Simulate API call to update status
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Update local state to reflect the change
       if (application) {
-        const updatedApplication = {
-          ...application,
-          status: 'APPOINTMENT_SCHEDULED',
-          appointmentDate: date.toISOString()
-        };
-        setApplication(updatedApplication);
+        setApplication((prev) => {
+          if (!prev) return null;
+          return {
+            ...prev,
+            status: 'APPOINTMENT_SCHEDULED',
+            appointmentDate: date.toISOString()
+          };
+        });
       }
       
       setIsAppointmentModalOpen(false);
@@ -64,11 +61,9 @@ export default function ApplicationDetailPage({ id, onBack }: ApplicationDetailP
   };
 
   const handleAddAsClient = async () => {
-    try {
-      // Simulate API call to update status
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Update local state to reflect the change
+    try {      
+      if(!application) return;
+      await setAsClient(application.applicatorId)
       if (application) {
         const updatedApplication = {
           ...application,
@@ -216,9 +211,9 @@ export default function ApplicationDetailPage({ id, onBack }: ApplicationDetailP
               {section.section === 'incident' && (
                 <div>
                   <label className="block text-sm font-medium text-gray-500">Olay Açıklaması</label>
-                  <p className="mt-2 text-sm text-gray-900 whitespace-pre-wrap">
+                    <p className="mt-2 text-sm text-gray-900 break-words whitespace-pre-wrap">
                     {section.data.incidentDescription}
-                  </p>
+                    </p>
                 </div>
               )}
 
@@ -230,6 +225,7 @@ export default function ApplicationDetailPage({ id, onBack }: ApplicationDetailP
       </div>
 
       <AppointmentModal
+        applicatorId={application.applicatorId}
         isOpen={isAppointmentModalOpen}
         onClose={() => setIsAppointmentModalOpen(false)}
         onSubmit={handleAppointmentSubmit}

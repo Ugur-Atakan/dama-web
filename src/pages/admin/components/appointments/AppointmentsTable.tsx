@@ -1,4 +1,3 @@
-import React from 'react';
 import type { Appointment } from '../../types/appointment';
 import { statusClasses, statusLabels } from '../../types/appointment';
 
@@ -34,7 +33,7 @@ export default function AppointmentsTable({ appointments }: AppointmentsTablePro
             {appointments.length === 0 ? (
               <tr>
                 <td colSpan={5} className="px-6 py-4 text-center text-sm text-gray-500">
-                  Bu ay için planlanmış randevu bulunmamaktadır
+                  Seçilen ay için planlanmış randevu bulunmamaktadır
                 </td>
               </tr>
             ) : (
@@ -42,17 +41,17 @@ export default function AppointmentsTable({ appointments }: AppointmentsTablePro
                 <tr key={appointment.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">
-                      {new Date(appointment.date).toLocaleDateString('tr-TR')}
+                      {new Date(appointment.dateTime).toLocaleDateString('tr-TR')}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">
-                      {appointment.time}
+                    {new Date(appointment.dateTime).toLocaleTimeString('tr-TR').slice(0, 5)}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">
-                      {appointment.clientName}
+                      {appointment.applicator.firstName} {appointment.applicator.lastName}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">

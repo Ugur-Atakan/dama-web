@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus } from 'lucide-react';
 import ApplicationsTable from './ApplicationsTable';
 import ApplicationDetailPage from './ApplicationDetailPage';
 import AddApplicationPage from './AddApplicationPage';
 import type { Application } from '../../types/application';
+import { deleteApplication, getApplicators } from '../../../../http/requests/admin';
 
 export default function ApplicationsPage() {
   const [applications, setApplications] = useState<Application[]>([]);
@@ -18,13 +19,10 @@ export default function ApplicationsPage() {
 
   const fetchApplications = async () => {
     try {
-      const response = await fetch('https://apidama.betterdemo.com.tr/api/admin/applicators');
-      if (!response.ok) {
-        throw new Error('Başvurular yüklenirken bir hata oluştu');
-      }
-      const data = await response.json();
-      console.log('Fetched applications:', data); // Debug log
-      setApplications(data);
+      const response = await getApplicators();
+      console.log('Fetched applications:', response); // Debug log
+      setApplications(response);
+      setLoading(false);
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Bir hata oluştu');
@@ -45,20 +43,29 @@ export default function ApplicationsPage() {
 
   const handleDelete = async (id: string) => {
     if (window.confirm('Bu başvuruyu silmek istediğinizden emin misiniz?')) {
-      setApplications(applications.filter(app => app.id !== id));
+     try {
+      setLoading(true);
+      await deleteApplication(id);
+      setApplications(applications.filter(app => app.applicatorId !== id));
+     } catch (error) {
+      console.error('Error deleting application:', error);
+      setError('Başvuru silinirken bir hata oluştu');
+     } finally {
+      setLoading(false);
+     }
     }
   };
 
   const handleAddApplication = (applicationData: any) => {
     const newApplication = {
-      id: `app-${Date.now()}`,
+      applicatorId: `app-${Date.now()}`,
       telephone: applicationData.preApplicationData.find((section: any) => section.section === 'contact')?.data.telephone || '',
       firstName: applicationData.preApplicationData.find((section: any) => section.section === 'contact')?.data.firstName || '',
       lastName: applicationData.preApplicationData.find((section: any) => section.section === 'contact')?.data.lastName || '',
       email: applicationData.preApplicationData.find((section: any) => section.section === 'contact')?.data.email || '',
       birthDate: null,
       address: null,
-      status: 'APPLICATOR',
+      status: "APPLICATOR" as const,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       deletedAt: null

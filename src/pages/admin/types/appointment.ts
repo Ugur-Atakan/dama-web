@@ -1,14 +1,14 @@
 export interface Appointment {
   id: string;
-  clientId: string;
-  clientName: string;
-  date: string;
-  time: string;
-  status: 'SCHEDULED' | 'COMPLETED' | 'CANCELLED';
+  applicator:any
+  dateTime: string;
+  status: 'PENDING'|'SCHEDULED' | 'COMPLETED' | 'CANCELLED';
   notes?: string;
+  appointmentType: 'ONLINE' | 'INOFFICE';
 }
 
 export const statusLabels: Record<string, string> = {
+  'PENDING': 'Bekliyor',
   'SCHEDULED': 'Planlandı',
   'COMPLETED': 'Tamamlandı',
   'CANCELLED': 'İptal Edildi'

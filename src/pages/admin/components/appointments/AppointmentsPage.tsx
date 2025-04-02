@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Calendar as CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { Appointment } from '../../types/appointment';
-import { mockAppointments } from '../../data/mockAppointments';
 import AppointmentsTable from './AppointmentsTable';
+import { getAppointments } from '../../../../http/requests/admin';
 
 export default function AppointmentsPage() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
@@ -17,9 +17,8 @@ export default function AppointmentsPage() {
   const fetchAppointments = async () => {
     try {
       setLoading(true);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setAppointments(mockAppointments);
+     const apps= await getAppointments();
+      setAppointments(apps);
       setError(null);
     } catch (err) {
       setError('Randevular yüklenirken bir hata oluştu');
@@ -45,7 +44,7 @@ export default function AppointmentsPage() {
   };
 
   const filteredAppointments = appointments.filter(appointment => {
-    const appointmentDate = new Date(appointment.date);
+    const appointmentDate = new Date(appointment.dateTime);
     return (
       appointmentDate.getMonth() === selectedDate.getMonth() &&
       appointmentDate.getFullYear() === selectedDate.getFullYear()

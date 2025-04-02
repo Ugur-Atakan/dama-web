@@ -15,7 +15,7 @@ export interface PreApplicationData {
 }
 
 export interface ApplicationDetail {
-  id: string;
+  applicatorId: string;
   applicationNumber: string;
   preApplicationData: PreApplicationData[];
   applicationData: any[]; // We'll type this later when needed

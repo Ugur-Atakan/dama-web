@@ -1,4 +1,3 @@
-import React from 'react';
 import { Eye, Trash2 } from 'lucide-react';
 import type { Application } from '../../types/application';
 import { statusClasses, statusLabels } from '../../types/application';
@@ -38,7 +37,7 @@ export default function ApplicationsTable({ applications, onViewDetails, onDelet
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {applications.map((application) => (
-              <tr key={application.id} className="hover:bg-gray-50">
+              <tr key={application.applicatorId} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm font-medium text-gray-900">
                     {`${application.firstName} ${application.lastName}`}
@@ -67,9 +66,7 @@ export default function ApplicationsTable({ applications, onViewDetails, onDelet
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   <div className="flex space-x-2">
                     <button
-                      onClick={() => {
-                        console.log('Viewing details for ID:', application.id); // Debug log
-                        onViewDetails(application.id);
+                      onClick={() => {onViewDetails(application.applicatorId);
                       }}
                       className="text-[#292A2D] hover:text-[#292A2D]/80 transition-colors"
                       title="Detayları Görüntüle"
@@ -77,7 +74,7 @@ export default function ApplicationsTable({ applications, onViewDetails, onDelet
                       <Eye size={20} />
                     </button>
                     <button
-                      onClick={() => onDelete(application.id)}
+                      onClick={() => onDelete(application.applicatorId)}
                       className="text-red-600 hover:text-red-800 transition-colors"
                       title="Sil"
                     >
