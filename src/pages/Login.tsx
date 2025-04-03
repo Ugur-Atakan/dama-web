@@ -12,7 +12,7 @@ import { loginApplicator } from "../store/slices/applicatorSlice";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-  const [lang, setLang] = useState<string|null>();
+  const [lang, setLang] = useState<string | null>();
   const { t } = useTranslation();
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [showOTP, setShowOTP] = useState(false);
@@ -87,7 +87,9 @@ export default function Login() {
         if (res.applicator.status === "APPLICATOR") {
           navigate("/forms/pre-application", { replace: true });
         } else if (res.applicator.status === "CLIENT") {
-          navigate("/forms/application-form",{replace:true});
+          navigate("/forms/application-form", { replace: true });
+        } else if (res.applicator.status === "APPOINTMENT_SCHEDULED") {
+          toast.success("You have already scheduled an appointment");
         } else {
           toast.error("Invalid User");
         }
